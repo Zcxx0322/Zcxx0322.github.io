@@ -1,0 +1,757 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Zcxx0322">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1. 初始化配置CentOS 71.1. 配置YUM1.1.1. 仅安装64位软件包1echo &quot;exclude&#x3D;*.i386 *.i586 *.i686&quot; &gt;&gt; &#x2F;etc&#x2F;yum.conf  1.1.2. 强制YUM使用IPv41echo &#x27;ip_resolve&#x3D;4&#x27; &gt;&gt; &#x2F;etc&#x2F;yum.conf  1.2. 更新系统1.2.1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初始化配置CentOS 7">
+<meta property="og:url" content="https://zcxx0322.github.io/2024/11/21/%E5%88%9D%E5%A7%8B%E5%8C%96%E9%85%8D%E7%BD%AECentOS7/index.html">
+<meta property="og:site_name" content="系统工程师实战">
+<meta property="og:description" content="1. 初始化配置CentOS 71.1. 配置YUM1.1.1. 仅安装64位软件包1echo &quot;exclude&#x3D;*.i386 *.i586 *.i686&quot; &gt;&gt; &#x2F;etc&#x2F;yum.conf  1.1.2. 强制YUM使用IPv41echo &#x27;ip_resolve&#x3D;4&#x27; &gt;&gt; &#x2F;etc&#x2F;yum.conf  1.2. 更新系统1.2.1">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-11-21T09:50:36.000Z">
+<meta property="article:modified_time" content="2024-11-21T11:40:40.813Z">
+<meta property="article:author" content="Zcxx0322">
+<meta property="article:tag" content="CentOS7">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>初始化配置CentOS 7 - 系统工程师实战</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"zcxx0322.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Zcxx`s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="初始化配置CentOS 7"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-11-21 17:50" pubdate>
+          2024年11月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">初始化配置CentOS 7</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-初始化配置CentOS-7"><a href="#1-初始化配置CentOS-7" class="headerlink" title="1. 初始化配置CentOS 7"></a>1. 初始化配置CentOS 7</h1><h2 id="1-1-配置YUM"><a href="#1-1-配置YUM" class="headerlink" title="1.1. 配置YUM"></a>1.1. 配置YUM</h2><h3 id="1-1-1-仅安装64位软件包"><a href="#1-1-1-仅安装64位软件包" class="headerlink" title="1.1.1. 仅安装64位软件包"></a>1.1.1. 仅安装64位软件包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;exclude=*.i386 *.i586 *.i686&quot;</span> &gt;&gt; /etc/yum.conf<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-1-2-强制YUM使用IPv4"><a href="#1-1-2-强制YUM使用IPv4" class="headerlink" title="1.1.2. 强制YUM使用IPv4"></a>1.1.2. 强制YUM使用IPv4</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;ip_resolve=4&#x27;</span> &gt;&gt; /etc/yum.conf<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-2-更新系统"><a href="#1-2-更新系统" class="headerlink" title="1.2. 更新系统"></a>1.2. 更新系统</h2><h3 id="1-2-1-YUM换源"><a href="#1-2-1-YUM换源" class="headerlink" title="1.2.1. YUM换源"></a>1.2.1. YUM换源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mv</span> /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak<br><br><span class="hljs-built_in">cat</span> &lt;&lt;<span class="hljs-string">EOF &gt; /etc/yum.repos.d/CentOS-Base.repo</span><br><span class="hljs-string">[base]</span><br><span class="hljs-string">name=CentOS-\$releasever - Base</span><br><span class="hljs-string">baseurl=https://mirrors.aliyun.com/centos/\$releasever/os/\$basearch/</span><br><span class="hljs-string">gpgcheck=1</span><br><span class="hljs-string">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7</span><br><span class="hljs-string"></span><br><span class="hljs-string">[updates]</span><br><span class="hljs-string">name=CentOS-\$releasever - Updates</span><br><span class="hljs-string">baseurl=https://mirrors.aliyun.com/centos/\$releasever/updates/\$basearch/</span><br><span class="hljs-string">gpgcheck=1</span><br><span class="hljs-string">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7</span><br><span class="hljs-string"></span><br><span class="hljs-string">[extras]</span><br><span class="hljs-string">name=CentOS-\$releasever - Extras</span><br><span class="hljs-string">baseurl=https://mirrors.aliyun.com/centos/\$releasever/extras/\$basearch/</span><br><span class="hljs-string">gpgcheck=1</span><br><span class="hljs-string">gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7</span><br><span class="hljs-string">EOF</span><br><br>yum clean all<br>yum makecache<br></code></pre></td></tr></table></figure>
+<h3 id="1-2-2-更新"><a href="#1-2-2-更新" class="headerlink" title="1.2.2. 更新"></a>1.2.2. 更新</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum update -y<br></code></pre></td></tr></table></figure>
+<h2 id="1-3-EPEL镜像设置"><a href="#1-3-EPEL镜像设置" class="headerlink" title="1.3. EPEL镜像设置"></a>1.3. EPEL镜像设置</h2><h3 id="1-3-1-安装EPEL软件包"><a href="#1-3-1-安装EPEL软件包" class="headerlink" title="1.3.1. 安装EPEL软件包"></a>1.3.1. 安装EPEL软件包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y epel-release<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-3-2-设置国内镜像服务器，加速EPEL软件包下载"><a href="#1-3-2-设置国内镜像服务器，加速EPEL软件包下载" class="headerlink" title="1.3.2. 设置国内镜像服务器，加速EPEL软件包下载"></a>1.3.2. 设置国内镜像服务器，加速EPEL软件包下载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">sed -e <span class="hljs-string">&#x27;s!^metalink=!#metalink=!g&#x27;</span> \<br>    -e <span class="hljs-string">&#x27;s!^#baseurl=!baseurl=!g&#x27;</span> \<br>    -e <span class="hljs-string">&#x27;s!//download\.fedoraproject\.org/pub!//mirrors.aliyun.com!g&#x27;</span> \<br>    -e <span class="hljs-string">&#x27;s!http://mirrors!https://mirrors!g&#x27;</span> \<br>    -i /etc/yum.repos.d/epel*.repo<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-3-3-创建YUM缓存，减少网络请求"><a href="#1-3-3-创建YUM缓存，减少网络请求" class="headerlink" title="1.3.3. 创建YUM缓存，减少网络请求"></a>1.3.3. 创建YUM缓存，减少网络请求</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum makecache<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-4-安装常用软件"><a href="#1-4-安装常用软件" class="headerlink" title="1.4. 安装常用软件"></a>1.4. 安装常用软件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y vim-enhanced wget curl yum-utils tree pwgen unzip expect tar xz bash-completion-extras<br></code></pre></td></tr></table></figure>
+<h2 id="1-5-安装Python3-8"><a href="#1-5-安装Python3-8" class="headerlink" title="1.5. 安装Python3.8+"></a>1.5. 安装Python3.8+</h2><h3 id="1-5-1-安装依赖：OpenSSL-1-1"><a href="#1-5-1-安装依赖：OpenSSL-1-1" class="headerlink" title="1.5.1. 安装依赖：OpenSSL 1.1+"></a>1.5.1. 安装依赖：OpenSSL 1.1+</h3><ul>
+<li><p>安装OpenSSL 1.1+软件包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash">pkg_name=openssl<br>pkg_ver=1.1.1n<br>pkg_rel=1<br>pkg=<span class="hljs-variable">$&#123;pkg_name&#125;</span>-<span class="hljs-variable">$&#123;pkg_ver&#125;</span><br>tar_name=<span class="hljs-variable">$&#123;pkg_name&#125;</span>-<span class="hljs-variable">$&#123;pkg_ver&#125;</span>-<span class="hljs-variable">$&#123;pkg_rel&#125;</span>.el7.x86_64.tar.gz<br>url=http://dl.cdgeekcamp.com/centos/7/<span class="hljs-variable">$&#123;pkg_name&#125;</span>/<span class="hljs-variable">$&#123;pkg_ver&#125;</span>/<span class="hljs-variable">$&#123;tar_name&#125;</span><br>prefix=/usr/local/<span class="hljs-variable">$&#123;pkg&#125;</span><br><br><span class="hljs-built_in">test</span> -d <span class="hljs-variable">$&#123;prefix&#125;</span> || (wget <span class="hljs-variable">$&#123;url&#125;</span> -O /tmp/<span class="hljs-variable">$&#123;tar_name&#125;</span> &amp;&amp; tar xf /tmp/<span class="hljs-variable">$&#123;tar_name&#125;</span> -C $(<span class="hljs-built_in">dirname</span> <span class="hljs-variable">$&#123;prefix&#125;</span>))<br><br><span class="hljs-built_in">rm</span> -f /tmp/<span class="hljs-variable">$&#123;tar_name&#125;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>更新动态链接库配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">egrep <span class="hljs-string">&quot;^<span class="hljs-variable">$&#123;prefix&#125;</span>/lib&quot;</span> /etc/ld.so.conf || (<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;<span class="hljs-variable">$&#123;prefix&#125;</span>/lib&quot;</span> &gt;&gt; /etc/ld.so.conf &amp;&amp; ldconfig)<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>确认配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ldconfig -p | grep <span class="hljs-variable">$&#123;prefix&#125;</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>终端输出</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@localhost ~]# ldconfig -p | grep <span class="hljs-variable">$&#123;prefix&#125;</span><br>        libssl.so.1.1 (libc6,x86-64) =&gt; /usr/local/openssl-1.1.1n/lib/libssl.so.1.1<br>        libssl.so (libc6,x86-64) =&gt; /usr/local/openssl-1.1.1n/lib/libssl.so<br>        libcrypto.so.1.1 (libc6,x86-64) =&gt; /usr/local/openssl-1.1.1n/lib/libcrypto.so.1.1<br>        libcrypto.so (libc6,x86-64) =&gt; /usr/local/openssl-1.1.1n/lib/libcrypto.so<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-5-2-安装Python3-8"><a href="#1-5-2-安装Python3-8" class="headerlink" title="1.5.2. 安装Python3.8+"></a>1.5.2. 安装Python3.8+</h3><ul>
+<li><p>设置Python3.8+安装变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash">pkg_name=python<br>pkg_ver=3.10.5<br>pkg_short_num=3<br>pkg_ver_num=310<br>pkg_rel=1<br>pkg=<span class="hljs-variable">$&#123;pkg_name&#125;</span>-<span class="hljs-variable">$&#123;pkg_ver&#125;</span><br>tar_name=<span class="hljs-variable">$&#123;pkg_name&#125;</span>-<span class="hljs-variable">$&#123;pkg_ver&#125;</span>-<span class="hljs-variable">$&#123;pkg_rel&#125;</span>.el7.x86_64.tar.gz<br>url=http://dl.cdgeekcamp.com/centos/7/python/3/<span class="hljs-variable">$&#123;tar_name&#125;</span><br>prefix=/usr/local/<span class="hljs-variable">$&#123;pkg&#125;</span><br>bin_dir=<span class="hljs-variable">$&#123;prefix&#125;</span>/bin<br></code></pre></td></tr></table></figure></li>
+<li><p>安装Python3.8+软件包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">test</span> -d <span class="hljs-variable">$&#123;prefix&#125;</span> || (wget <span class="hljs-variable">$&#123;url&#125;</span> -O /tmp/<span class="hljs-variable">$&#123;tar_name&#125;</span> &amp;&amp; tar xf /tmp/<span class="hljs-variable">$&#123;tar_name&#125;</span> -C $(<span class="hljs-built_in">dirname</span> <span class="hljs-variable">$&#123;prefix&#125;</span>))<br><br><span class="hljs-built_in">rm</span> -f /tmp/<span class="hljs-variable">$&#123;tar_name&#125;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>设置Python3.8+的环境变量</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;export PATH=<span class="hljs-variable">$&#123;bin_dir&#125;</span>:<span class="hljs-variable">$&#123;PATH&#125;</span>&quot;</span> &gt; /etc/profile.d/python<span class="hljs-variable">$&#123;pkg_short_num&#125;</span>.sh<br>. /etc/profile<br></code></pre></td></tr></table></figure></li>
+<li><p>确认设置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">which</span> python<span class="hljs-variable">$&#123;pkg_short_num&#125;</span> | grep <span class="hljs-variable">$&#123;prefix&#125;</span><br></code></pre></td></tr></table></figure>
+<p><strong>终端输出</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/usr/local/python-3.10.5/bin/python3<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>设置Python3.8+的软链接</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> <span class="hljs-variable">$&#123;bin_dir&#125;</span><br><span class="hljs-built_in">test</span> -L pip<span class="hljs-variable">$&#123;pkg_ver_num&#125;</span> || <span class="hljs-built_in">ln</span> -v -s pip<span class="hljs-variable">$&#123;pkg_short_num&#125;</span> pip<span class="hljs-variable">$&#123;pkg_ver_num&#125;</span><br><span class="hljs-built_in">test</span> -L python<span class="hljs-variable">$&#123;pkg_ver_num&#125;</span> || <span class="hljs-built_in">ln</span> -v -s python<span class="hljs-variable">$&#123;pkg_short_num&#125;</span> python<span class="hljs-variable">$&#123;pkg_ver_num&#125;</span><br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;PIP软链接：pip<span class="hljs-variable">$&#123;pkg_ver_num&#125;</span>\nPython3软链接：python<span class="hljs-variable">$&#123;pkg_ver_num&#125;</span>&quot;</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>测试pip命令<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;执行命令：pip<span class="hljs-variable">$&#123;pkg_ver_num&#125;</span> list\n&quot;</span> &amp;&amp; pip<span class="hljs-variable">$&#123;pkg_ver_num&#125;</span> list<br></code></pre></td></tr></table></figure>
+<strong>终端输出</strong><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><br>执行命令：pip310 list<br><br>Package    Version<br>---------- -------<br>pip        22.1.2<br>setuptools 58.1.0<br><br>[notice] A new release of pip available: 22.1.2 -&gt; 24.3.1<br>[notice] To update, run: pip install --upgrade pip<br></code></pre></td></tr></table></figure></li>
+</ul>
+<p><em>若出现输出内的notice，则说明当前pip版本过低，可以执行pip install –upgrade pip来升级pip，下次便不会提醒！</em></p>
+<p><font color=red>注：可能会因为源的问题导致更新pip失败！</font></p>
+<ul>
+<li>这里提供pip换源的方式<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bahs">mkdir -p ~/.pip<br>cat &gt; ~/.pip/pip.conf &lt;&lt;EOF<br>[global]<br>index-url = https://mirrors.aliyun.com/pypi/simple/<br>trusted-host = mirrors.aliyun.com<br><br>[install]<br>use-deprecated=legacy-resolver<br>EOF<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="1-6-安装命令行编辑工具"><a href="#1-6-安装命令行编辑工具" class="headerlink" title="1.6. 安装命令行编辑工具"></a>1.6. 安装命令行编辑工具</h2><h3 id="1-6-1-XML编辑工具"><a href="#1-6-1-XML编辑工具" class="headerlink" title="1.6.1. XML编辑工具"></a>1.6.1. XML编辑工具</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y xmlstarlet<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-6-2-INI和Java-Properties文件编辑工具"><a href="#1-6-2-INI和Java-Properties文件编辑工具" class="headerlink" title="1.6.2 INI和Java Properties文件编辑工具"></a>1.6.2 INI和Java Properties文件编辑工具</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y crudini<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-7-设置系统时区"><a href="#1-7-设置系统时区" class="headerlink" title="1.7. 设置系统时区"></a>1.7. 设置系统时区</h2><p><em>当前系统时区设置为 中国上海</em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">yes</span>|<span class="hljs-built_in">cp</span> /usr/share/zoneinfo/Asia/Shanghai /etc/localtime<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-8-安装时间同步服务"><a href="#1-8-安装时间同步服务" class="headerlink" title="1.8. 安装时间同步服务"></a>1.8. 安装时间同步服务</h2><p>安装时间同步软件chrony</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y chrony<br></code></pre></td></tr></table></figure>
+
+<p>设置开机启动</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl <span class="hljs-built_in">enable</span> chronyd<br></code></pre></td></tr></table></figure>
+
+<p>启动时间同步服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl start chronyd<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-9-禁用IPv6"><a href="#1-9-禁用IPv6" class="headerlink" title="1.9. 禁用IPv6"></a>1.9. 禁用IPv6</h2><p>永久禁用IPv6，重启后生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;net.ipv6.conf.all.disable_ipv6 = 1&quot;</span> &gt;&gt;  /etc/sysctl.conf<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;net.ipv6.conf.default.disable_ipv6 = 1&quot;</span> &gt;&gt;  /etc/sysctl.conf<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-10-删除安装日志"><a href="#1-10-删除安装日志" class="headerlink" title="1.10. 删除安装日志"></a>1.10. 删除安装日志</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">rm</span> -f ~/anaconda-ks.cfg  ~/install.log  ~/install.log.syslog<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-11-禁用SELINUX"><a href="#1-11-禁用SELINUX" class="headerlink" title="1.11. 禁用SELINUX"></a>1.11. 禁用SELINUX</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> SELINUX=disabled&gt;/etc/selinux/config<br><span class="hljs-built_in">echo</span> SELINUXTYPE=targeted&gt;&gt;/etc/selinux/config<br></code></pre></td></tr></table></figure>
+<h2 id="1-12-设置最大文件句柄"><a href="#1-12-设置最大文件句柄" class="headerlink" title="1.12. 设置最大文件句柄"></a>1.12. 设置最大文件句柄</h2><p><em>也许你听过，”Linux下，一切皆文件”。 文件句柄 种类很多，常见的有普通文件句柄（C语言中 open() 函数返回的就是文件句柄）、网络相关句柄等</em></p>
+<p>永久设置打开文件（句柄）的最大数量，重启后生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;*               soft   nofile            65535&quot;</span> &gt;&gt; /etc/security/limits.conf<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;*               hard   nofile            65535&quot;</span> &gt;&gt; /etc/security/limits.conf<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-13-优化SSH服务"><a href="#1-13-优化SSH服务" class="headerlink" title="1.13. 优化SSH服务"></a>1.13. 优化SSH服务</h2><ul>
+<li><p>修改SSH服务端配置文件sshd_config，加速登录速度、设置连接保持等</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># SSH连接时，服务端会将客户端IP反向解析为域名，导致登录过程缓慢</span><br>sed -i <span class="hljs-string">&quot;s/#UseDNS yes/UseDNS no/&quot;</span> /etc/ssh/sshd_config<br>sed -i <span class="hljs-string">&quot;s/GSSAPIAuthentication yes/GSSAPIAuthentication no/&quot;</span> /etc/ssh/sshd_config<br>sed -i <span class="hljs-string">&quot;s/GSSAPICleanupCredentials yes/GSSAPICleanupCredentials no/&quot;</span> /etc/ssh/sshd_config<br><span class="hljs-comment"># 登录失败最大尝试次数</span><br>sed -i <span class="hljs-string">&quot;s/#MaxAuthTries 6/MaxAuthTries 10/&quot;</span> /etc/ssh/sshd_config<br><span class="hljs-comment"># 连接保持：服务端每隔N秒发送一次请求给客户端，客户端响应后完成一次连接保持检查</span><br>sed -i <span class="hljs-string">&quot;s/#ClientAliveInterval 0/ClientAliveInterval 30/&quot;</span> /etc/ssh/sshd_config<br><span class="hljs-comment"># 连接保持最大重试次数：服务端发出请求后，超过N次没有收到客户端响应，服务端则断开客户端连接</span><br>sed -i <span class="hljs-string">&quot;s/#ClientAliveCountMax 3/ClientAliveCountMax 10/&quot;</span> /etc/ssh/sshd_config<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>重载SSH服务端配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl reload sshd<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>退出当前Shell，重新登录SSH后，新配置生效</p>
+</li>
+</ul>
+<h2 id="1-14-设置主机名"><a href="#1-14-设置主机名" class="headerlink" title="1.14. 设置主机名"></a>1.14. 设置主机名</h2><h3 id="1-14-1-初始化本地解析设置"><a href="#1-14-1-初始化本地解析设置" class="headerlink" title="1.14.1 初始化本地解析设置"></a>1.14.1 初始化本地解析设置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4&#x27;</span> &gt; /etc/hosts<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CentOS7/" class="category-chain-item">CentOS7</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/CentOS7/" class="print-no-link">#CentOS7</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>初始化配置CentOS 7</div>
+      <div>https://zcxx0322.github.io/2024/11/21/初始化配置CentOS7/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Zcxx0322</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年11月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              MIT
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'Zcxx0322/Zcxx0322.github.io');
+      s.setAttribute('issue-term', 'title');
+      
+      s.setAttribute('label', 'utterances');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
