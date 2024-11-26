@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zcxx0322.github.io/img/CentOS7.png">
 <meta property="article:published_time" content="2024-11-21T09:50:36.000Z">
-<meta property="article:modified_time" content="2024-11-22T03:35:47.838Z">
+<meta property="article:modified_time" content="2024-11-26T09:45:58.226Z">
 <meta property="article:author" content="Zcxx0322">
 <meta property="article:tag" content="CentOS7">
 <meta name="twitter:card" content="summary_large_image">
@@ -302,7 +302,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ldconfig -p | grep <span class="hljs-variable">$&#123;prefix&#125;</span><br></code></pre></td></tr></table></figure></li>
 </ul>
 <p><strong>终端输出</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">[root@localhost ~]# ldconfig -p | grep <span class="hljs-variable">$&#123;prefix&#125;</span><br>        libssl.so.1.1 (libc6,x86-64) =&gt; /usr/local/openssl-1.1.1n/lib/libssl.so.1.1<br>        libssl.so (libc6,x86-64) =&gt; /usr/local/openssl-1.1.1n/lib/libssl.so<br>        libcrypto.so.1.1 (libc6,x86-64) =&gt; /usr/local/openssl-1.1.1n/lib/libcrypto.so.1.1<br>        libcrypto.so (libc6,x86-64) =&gt; /usr/local/openssl-1.1.1n/lib/libcrypto.so<br></code></pre></td></tr></table></figure>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs cmd">[root@localhost ~]# ldconfig -p | grep $&#123;prefix&#125;<br>        libssl.so.<span class="hljs-number">1</span>.<span class="hljs-number">1</span> (libc6,x86-<span class="hljs-number">64</span>) =&gt; /usr/local/openssl-<span class="hljs-number">1</span>.<span class="hljs-number">1</span>.<span class="hljs-number">1</span>n/lib/libssl.so.<span class="hljs-number">1</span>.<span class="hljs-number">1</span><br>        libssl.so (libc6,x86-<span class="hljs-number">64</span>) =&gt; /usr/local/openssl-<span class="hljs-number">1</span>.<span class="hljs-number">1</span>.<span class="hljs-number">1</span>n/lib/libssl.so<br>        libcrypto.so.<span class="hljs-number">1</span>.<span class="hljs-number">1</span> (libc6,x86-<span class="hljs-number">64</span>) =&gt; /usr/local/openssl-<span class="hljs-number">1</span>.<span class="hljs-number">1</span>.<span class="hljs-number">1</span>n/lib/libcrypto.so.<span class="hljs-number">1</span>.<span class="hljs-number">1</span><br>        libcrypto.so (libc6,x86-<span class="hljs-number">64</span>) =&gt; /usr/local/openssl-<span class="hljs-number">1</span>.<span class="hljs-number">1</span>.<span class="hljs-number">1</span>n/lib/libcrypto.so<br></code></pre></td></tr></table></figure>
 
 <h3 id="1-5-2-安装Python3-8"><a href="#1-5-2-安装Python3-8" class="headerlink" title="1.5.2. 安装Python3.8+"></a>1.5.2. 安装Python3.8+</h3><ul>
 <li><p>设置Python3.8+安装变量</p>
@@ -315,7 +315,7 @@
 <li><p>确认设置</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">which</span> python<span class="hljs-variable">$&#123;pkg_short_num&#125;</span> | grep <span class="hljs-variable">$&#123;prefix&#125;</span><br></code></pre></td></tr></table></figure>
 <p><strong>终端输出</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">/usr/local/python-3.10.5/bin/python3<br></code></pre></td></tr></table></figure>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmd">/usr/local/python-<span class="hljs-number">3</span>.<span class="hljs-number">10</span>.<span class="hljs-number">5</span>/bin/python3<br></code></pre></td></tr></table></figure>
 </li>
 <li><p>设置Python3.8+的软链接</p>
 </li>
@@ -324,12 +324,12 @@
 
 <ul>
 <li>测试pip命令<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;执行命令：pip<span class="hljs-variable">$&#123;pkg_ver_num&#125;</span> list\n&quot;</span> &amp;&amp; pip<span class="hljs-variable">$&#123;pkg_ver_num&#125;</span> list<br></code></pre></td></tr></table></figure>
-<strong>终端输出</strong><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><br>执行命令：pip310 list<br><br>Package    Version<br>---------- -------<br>pip        22.1.2<br>setuptools 58.1.0<br><br>[notice] A new release of pip available: 22.1.2 -&gt; 24.3.1<br>[notice] To update, run: pip install --upgrade pip<br></code></pre></td></tr></table></figure></li>
+<strong>终端输出</strong><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cmd">执行命令：pip310 list<br><br>Package    Version<br>---------- -------<br>pip        <span class="hljs-number">22</span>.<span class="hljs-number">1</span>.<span class="hljs-number">2</span><br>setuptools <span class="hljs-number">58</span>.<span class="hljs-number">1</span>.<span class="hljs-number">0</span><br><br>[notice] A new release of pip available: <span class="hljs-number">22</span>.<span class="hljs-number">1</span>.<span class="hljs-number">2</span> -&gt; <span class="hljs-number">24</span>.<span class="hljs-number">3</span>.<span class="hljs-number">1</span><br>[notice] To update, run: pip install --upgrade pip<br></code></pre></td></tr></table></figure></li>
 </ul>
 <p><em>若出现输出内的notice，则说明当前pip版本过低，可以执行pip install –upgrade pip来升级pip，下次便不会提醒！</em></p>
 <p><font color=red>注：可能会因为源的问题导致更新pip失败！</font></p>
 <ul>
-<li>这里提供pip换源的方式<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bahs">mkdir -p ~/.pip<br>cat &gt; ~/.pip/pip.conf &lt;&lt;EOF<br>[global]<br>index-url = https://mirrors.aliyun.com/pypi/simple/<br>trusted-host = mirrors.aliyun.com<br><br>[install]<br>use-deprecated=legacy-resolver<br>EOF<br></code></pre></td></tr></table></figure></li>
+<li>这里提供pip换源的方式<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p ~/.pip<br><span class="hljs-built_in">cat</span> &gt; ~/.pip/pip.conf &lt;&lt;<span class="hljs-string">EOF</span><br><span class="hljs-string">[global]</span><br><span class="hljs-string">index-url = https://mirrors.aliyun.com/pypi/simple/</span><br><span class="hljs-string">trusted-host = mirrors.aliyun.com</span><br><span class="hljs-string"></span><br><span class="hljs-string">[install]</span><br><span class="hljs-string">use-deprecated=legacy-resolver</span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="1-6-安装命令行编辑工具"><a href="#1-6-安装命令行编辑工具" class="headerlink" title="1.6. 安装命令行编辑工具"></a>1.6. 安装命令行编辑工具</h2><h3 id="1-6-1-XML编辑工具"><a href="#1-6-1-XML编辑工具" class="headerlink" title="1.6.1. XML编辑工具"></a>1.6.1. XML编辑工具</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y xmlstarlet<br></code></pre></td></tr></table></figure>
 
@@ -368,7 +368,6 @@
 </li>
 </ul>
 <h2 id="1-14-设置主机名"><a href="#1-14-设置主机名" class="headerlink" title="1.14. 设置主机名"></a>1.14. 设置主机名</h2><h3 id="1-14-1-初始化本地解析设置"><a href="#1-14-1-初始化本地解析设置" class="headerlink" title="1.14.1 初始化本地解析设置"></a>1.14.1 初始化本地解析设置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&#x27;127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4&#x27;</span> &gt; /etc/hosts<br></code></pre></td></tr></table></figure>
-
 
 
 
@@ -454,6 +453,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/11/26/Archlinux-Gnome/" title="Archlinux+Gnome">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Archlinux+Gnome</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
