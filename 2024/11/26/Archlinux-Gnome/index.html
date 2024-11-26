@@ -19,16 +19,16 @@
   <meta name="author" content="Zcxx0322">
   <meta name="keywords" content="">
   
-    <meta name="description" content="安装前说明ArchLinux安装可以在启动镜像之后，通过SSH连接复制以下命令字符完成安装。步骤如下： 当然这里涉及到联网的问题，以直接跳转到 连接WIFI  ip a 查看IP地址； systemctl start sshd 启动SSH服务； passwd 修改启动镜像root用户密码； 使用任意SSH客户端软件，连接启动镜像IP地址的22端口即可。  如果是安装中途连接SSH的，请注意适时执行">
+    <meta name="description" content="安装前说明ArchLinux安装可以在启动镜像之后，通过SSH连接复制以下命令字符完成安装。步骤如下： 当然这里涉及到联网的问题，4. 连接WIFI  ip a 查看IP地址； systemctl start sshd 启动SSH服务； passwd 修改启动镜像root用户密码； 使用任意SSH客户端软件，连接启动镜像IP地址的22端口即可。  如果是安装中途连接SSH的，请注意适时执行 arc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Archlinux+Gnome">
 <meta property="og:url" content="https://zcxx0322.github.io/2024/11/26/Archlinux-Gnome/index.html">
 <meta property="og:site_name" content="系统工程师实战">
-<meta property="og:description" content="安装前说明ArchLinux安装可以在启动镜像之后，通过SSH连接复制以下命令字符完成安装。步骤如下： 当然这里涉及到联网的问题，以直接跳转到 连接WIFI  ip a 查看IP地址； systemctl start sshd 启动SSH服务； passwd 修改启动镜像root用户密码； 使用任意SSH客户端软件，连接启动镜像IP地址的22端口即可。  如果是安装中途连接SSH的，请注意适时执行">
+<meta property="og:description" content="安装前说明ArchLinux安装可以在启动镜像之后，通过SSH连接复制以下命令字符完成安装。步骤如下： 当然这里涉及到联网的问题，4. 连接WIFI  ip a 查看IP地址； systemctl start sshd 启动SSH服务； passwd 修改启动镜像root用户密码； 使用任意SSH客户端软件，连接启动镜像IP地址的22端口即可。  如果是安装中途连接SSH的，请注意适时执行 arc">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://zcxx0322.github.io/img/archlinux.jpg">
 <meta property="article:published_time" content="2024-11-26T06:35:57.000Z">
-<meta property="article:modified_time" content="2024-11-26T09:44:19.937Z">
+<meta property="article:modified_time" content="2024-11-26T10:04:12.338Z">
 <meta property="article:author" content="Zcxx0322">
 <meta property="article:tag" content="Archlinux">
 <meta name="twitter:card" content="summary_large_image">
@@ -279,7 +279,7 @@
               <div class="markdown-body">
                 
                 <h1 id="安装前说明"><a href="#安装前说明" class="headerlink" title="安装前说明"></a>安装前说明</h1><p><em>ArchLinux安装可以在启动镜像之后，通过SSH连接复制以下命令字符完成安装。步骤如下：</em></p>
-<p>当然这里涉及到联网的问题，以直接跳转到 <a href="#4-%E8%BF%9E%E6%8E%A5wifi">连接WIFI</a></p>
+<p>当然这里涉及到联网的问题，<a href="#4-%E8%BF%9E%E6%8E%A5wifi">4. 连接WIFI</a></p>
 <ol>
 <li><code>ip a</code> 查看IP地址；</li>
 <li><code>systemctl start sshd</code> 启动SSH服务；</li>
@@ -291,16 +291,16 @@
 
 <p><em>按照本教程安装<font color='red'>ArchLinux</font> ，硬盘至少需要10G以上。</em></p>
 <p><em>如果使用UEFI启动方式，需要新建 <code>/dev/sda1</code> 容量300~500M，并且设置为启动分区，其余分区编号顺延。</em></p>
-<h2 id="1-1-新建EFI分区"><a href="#1-1-新建EFI分区" class="headerlink" title="1.1. 新建EFI分区"></a>1.1. 新建EFI分区</h2><p><img src="C:\Users\36117\Desktop\zcx\LogBuild\source\img\arch1.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="1-1-新建EFI分区"><a href="#1-1-新建EFI分区" class="headerlink" title="1.1. 新建EFI分区"></a>1.1. 新建EFI分区</h2><p><img src="/img/arch1.jpg" srcset="/img/loading.gif" lazyload></p>
 <h2 id="1-2-新建交换分区"><a href="#1-2-新建交换分区" class="headerlink" title="1.2. 新建交换分区"></a>1.2. 新建交换分区</h2><p><em>可选可不选，类似于虚拟内存</em></p>
-<p><img src="C:\Users\36117\Desktop\zcx\LogBuild\source\img\arch2.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/arch2.png" srcset="/img/loading.gif" lazyload></p>
 <h2 id="1-3-新建主分区"><a href="#1-3-新建主分区" class="headerlink" title="1.3. 新建主分区"></a>1.3. 新建主分区</h2><p><em>剩下全部建立到一起为根目录分区，类型默认即可</em>。</p>
-<p><img src="C:\Users\36117\Desktop\zcx\LogBuild\source\img\arch3.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/arch3.png" srcset="/img/loading.gif" lazyload></p>
 <p>选中<code>Write</code>,输入<code>yes</code>确定，选择<code>Quit</code>退出分区。</p>
 <h2 id="1-4-查看分区情况"><a href="#1-4-查看分区情况" class="headerlink" title="1.4. 查看分区情况"></a>1.4. 查看分区情况</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">fdisk -l<br></code></pre></td></tr></table></figure>
 
 <p><em>确定好自己每一个分区的类型，目的，名称。</em></p>
-<p><img src="C:\Users\36117\Desktop\zcx\LogBuild\source\img\arch4.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/arch4.png" srcset="/img/loading.gif" lazyload></p>
 <h1 id="2-格式化分区"><a href="#2-格式化分区" class="headerlink" title="2. 格式化分区"></a>2. 格式化分区</h1><h2 id="2-1-格式化主分区"><a href="#2-1-格式化主分区" class="headerlink" title="2.1. 格式化主分区"></a>2.1. 格式化主分区</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mkfs.ext4 /dev/sda3<br></code></pre></td></tr></table></figure>
 
 <p><em>此为格式化分区，会擦除数据</em></p>
