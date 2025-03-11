@@ -19,22 +19,22 @@
   <meta name="author" content="Zcxx0322">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1.简介本指南是“Hello World”风格的教程，展示了如何安装、配置和使用简单的 Prometheus 实例。您将在本地下载并运行 Prometheus，将其配置为抓取自身和示例应用程序，然后使用查询、规则和图表来使用收集的时间序列数据。 下载并解压Prometheus下载最新版本的 Prometheus，然后解压并运行它： 123wget -c https:&#x2F;&#x2F;github.com&#x2F;pro">
+    <meta name="description" content="1. DeepSeek 模型规格表   模型版本 参数量 显存需求（FP16） 推荐 GPU（单卡） 多卡支持 量化支持 适用场景    DeepSeek-R1-1.5B 15亿 3GB GTX 1650（4GB显存） 无需 支持 低资源设备部署（树莓派、旧款笔记本）、实时文本生成、嵌入式系统   DeepSeek-R1-7B 70亿 14GB RTX 3070&#x2F;4060（8GB显存）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Prometheus">
-<meta property="og:url" content="https://zcxx0322.github.io/2025/03/08/Prometheus/index.html">
+<meta property="og:title" content="本地部署DeepSeek-R1">
+<meta property="og:url" content="https://zcxx0322.github.io/2025/03/11/%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2DeepSeek-R1/index.html">
 <meta property="og:site_name" content="系统工程师实战">
-<meta property="og:description" content="1.简介本指南是“Hello World”风格的教程，展示了如何安装、配置和使用简单的 Prometheus 实例。您将在本地下载并运行 Prometheus，将其配置为抓取自身和示例应用程序，然后使用查询、规则和图表来使用收集的时间序列数据。 下载并解压Prometheus下载最新版本的 Prometheus，然后解压并运行它： 123wget -c https:&#x2F;&#x2F;github.com&#x2F;pro">
+<meta property="og:description" content="1. DeepSeek 模型规格表   模型版本 参数量 显存需求（FP16） 推荐 GPU（单卡） 多卡支持 量化支持 适用场景    DeepSeek-R1-1.5B 15亿 3GB GTX 1650（4GB显存） 无需 支持 低资源设备部署（树莓派、旧款笔记本）、实时文本生成、嵌入式系统   DeepSeek-R1-7B 70亿 14GB RTX 3070&#x2F;4060（8GB显存）">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-03-08T06:10:14.000Z">
-<meta property="article:modified_time" content="2025-03-08T07:07:57.739Z">
+<meta property="article:published_time" content="2025-03-11T01:35:51.000Z">
+<meta property="article:modified_time" content="2025-03-11T02:31:05.222Z">
 <meta property="article:author" content="Zcxx0322">
-<meta property="article:tag" content="Prometheus">
+<meta property="article:tag" content="DeepSeek">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Prometheus - 系统工程师实战</title>
+  <title>本地部署DeepSeek-R1 - 系统工程师实战</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -200,7 +200,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Prometheus"></span>
+            <span id="subtitle" data-typed-text="本地部署DeepSeek-R1"></span>
           
         </div>
 
@@ -211,8 +211,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-08 14:10" pubdate>
-          2025年3月8日 下午
+        <time datetime="2025-03-11 09:35" pubdate>
+          2025年3月11日 上午
         </time>
       </span>
     
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          507 字
+          627 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          5 分钟
+          6 分钟
         
       </span>
     
@@ -271,26 +271,127 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Prometheus</h1>
+            <h1 id="seo-header">本地部署DeepSeek-R1</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h1><p>本指南是“Hello World”风格的教程，展示了如何安装、配置和使用简单的 Prometheus 实例。您将在本地下载并运行 Prometheus，将其配置为抓取自身和示例应用程序，然后使用查询、规则和图表来使用收集的时间序列数据。</p>
-<h1 id="下载并解压Prometheus"><a href="#下载并解压Prometheus" class="headerlink" title="下载并解压Prometheus"></a>下载并解压Prometheus</h1><p><a target="_blank" rel="noopener" href="https://prometheus.io/download">下载最新版本的 Prometheus</a>，然后解压并运行它：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget -c https://github.com/prometheus/prometheus/releases/download/v3.2.1/prometheus-3.2.1.linux-amd64.tar.gz<br><br>tar xvfz prometheus-*.tar.gz<br></code></pre></td></tr></table></figure>
+                <h1 id="1-DeepSeek-模型规格表"><a href="#1-DeepSeek-模型规格表" class="headerlink" title="1. DeepSeek 模型规格表"></a>1. DeepSeek 模型规格表</h1><table>
+<thead>
+<tr>
+<th>模型版本</th>
+<th>参数量</th>
+<th>显存需求（FP16）</th>
+<th>推荐 GPU（单卡）</th>
+<th>多卡支持</th>
+<th>量化支持</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DeepSeek-R1-1.5B</td>
+<td>15亿</td>
+<td>3GB</td>
+<td>GTX 1650（4GB显存）</td>
+<td>无需</td>
+<td>支持</td>
+<td>低资源设备部署（树莓派、旧款笔记本）、实时文本生成、嵌入式系统</td>
+</tr>
+<tr>
+<td>DeepSeek-R1-7B</td>
+<td>70亿</td>
+<td>14GB</td>
+<td>RTX 3070&#x2F;4060（8GB显存）</td>
+<td>可选</td>
+<td>支持</td>
+<td>中等复杂度任务（文本摘要、翻译）、轻量级多轮对话系统</td>
+</tr>
+<tr>
+<td>DeepSeek-R1-8B</td>
+<td>80亿</td>
+<td>16GB</td>
+<td>RTX 4070（12GB显存）</td>
+<td>可选</td>
+<td>支持</td>
+<td>需更高精度的轻量级任务（代码生成、逻辑推理）</td>
+</tr>
+<tr>
+<td>DeepSeek-R1-14B</td>
+<td>140亿</td>
+<td>32GB</td>
+<td>RTX 4090&#x2F;A5000（16GB显存）</td>
+<td>推荐</td>
+<td>支持</td>
+<td>企业级复杂任务（合同分析、报告生成）、长文本理解与生成</td>
+</tr>
+<tr>
+<td>DeepSeek-R1-32B</td>
+<td>320亿</td>
+<td>64GB</td>
+<td>A100 40GB（24GB显存）</td>
+<td>推荐</td>
+<td>支持</td>
+<td>高精度专业领域任务（医疗&#x2F;法律咨询）、多模态任务预处理</td>
+</tr>
+<tr>
+<td>DeepSeek-R1-70B</td>
+<td>700亿</td>
+<td>140GB</td>
+<td>2x A100 80GB&#x2F;4x RTX 4090</td>
+<td>必需</td>
+<td>支持</td>
+<td>科研机构&#x2F;大型企业（金融预测、大规模数据分析）、高复杂度生成任务</td>
+</tr>
+<tr>
+<td>DeepSeek-671B</td>
+<td>6710亿</td>
+<td>512GB+</td>
+<td>8x A100&#x2F;H100（服务器集群）</td>
+<td>必需</td>
+<td>支持</td>
+<td>国家级&#x2F;超大规模 AI 研究（气候建模、基因组分析）、通用人工智能（AGI）探索</td>
+</tr>
+</tbody></table>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
+<li><strong>显存需求</strong>基于FP16精度估算，实际使用可能因框架优化差异略有波动。</li>
+<li>​<strong>多卡支持</strong>标注为”推荐”的型号在单卡运行时可能面临显存限制。</li>
+<li>​<strong>量化支持</strong>包含4bit&#x2F;8bit等主流量化方案，可降低约30-70%显存占用。</li>
+<li>700B+级超大模型建议通过API调用方式使用，本地部署需专业运维团队支持。</li>
+</ul>
+<h1 id="2-教程演示硬件配置如下"><a href="#2-教程演示硬件配置如下" class="headerlink" title="2. 教程演示硬件配置如下"></a>2. 教程演示硬件配置如下</h1><pre><code class="hljs">OS: Arch Linux x86_64 
+Host: Z3 Air Series GK5MP5O 
+Kernel: 6.12.17-1-lts 
+Uptime: 14 mins 
+Packages: 840 (pacman) 
+Shell: bash 5.2.37 
+Resolution: 1920x1080 
+DE: GNOME 47.5 
+WM: Mutter 
+WM Theme: Adwaita 
+Theme: Adwaita [GTK2/3] 
+Icons: Adwaita [GTK2/3] 
+Terminal: gnome-terminal 
+CPU: Intel i5-10200H (8) @ 4.100GHz 
+GPU: NVIDIA GeForce GTX 1650 Mobile / Max-Q 
+GPU: Intel Comet Lake-H GT1 [UHD Graphics 610] 
+Memory: 4201MiB / 15829MiB
+</code></pre>
+<h1 id="3-部署过程"><a href="#3-部署过程" class="headerlink" title="3. 部署过程"></a>3. 部署过程</h1><h2 id="3-1-下载安装Ollama"><a href="#3-1-下载安装Ollama" class="headerlink" title="3.1. 下载安装Ollama"></a>3.1. 下载安装Ollama</h2><p>Ollama目前已支持MacOS,Linux,Windows，<a target="_blank" rel="noopener" href="https://ollama.com/download">Ollama官方下载地址</a></p>
+<hr>
+<p>Archlinux可以直接使用pacman命令安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> pacman -S ollama<br></code></pre></td></tr></table></figure>
 
-<p>Prometheus 通过抓取指标 HTTP 端点从目标收集指标。由于 Prometheus 以相同的方式公开有关自身的数据，因此它也可以抓取和监控自己的健康状况。</p>
-<p>虽然仅收集有关自身的数据的 Prometheus 服务器不是很有用，但它是一个很好的入门示例。将以下基本 Prometheus 配置保存为名为 prometheus.yml 的文件：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-attr">global:</span><br>  <span class="hljs-attr">scrape_interval:</span>     <span class="hljs-string">15s</span> <span class="hljs-comment"># By default, scrape targets every 15 seconds.</span><br><br>  <span class="hljs-comment"># Attach these labels to any time series or alerts when communicating with</span><br>  <span class="hljs-comment"># external systems (federation, remote storage, Alertmanager).</span><br>  <span class="hljs-attr">external_labels:</span><br>    <span class="hljs-attr">monitor:</span> <span class="hljs-string">&#x27;codelab-monitor&#x27;</span><br><br><span class="hljs-comment"># A scrape configuration containing exactly one endpoint to scrape:</span><br><span class="hljs-comment"># Here it&#x27;s Prometheus itself.</span><br><span class="hljs-attr">scrape_configs:</span><br>  <span class="hljs-comment"># The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</span><br>  <span class="hljs-bullet">-</span> <span class="hljs-attr">job_name:</span> <span class="hljs-string">&#x27;prometheus&#x27;</span><br><br>    <span class="hljs-comment"># Override the global default and scrape targets from this job every 5 seconds.</span><br>    <span class="hljs-attr">scrape_interval:</span> <span class="hljs-string">5s</span><br><br>    <span class="hljs-attr">static_configs:</span><br>      <span class="hljs-bullet">-</span> <span class="hljs-attr">targets:</span> [<span class="hljs-string">&#x27;localhost:9090&#x27;</span>]<br></code></pre></td></tr></table></figure>
-<p>有关配置文件的完整规范，请参阅<a target="_blank" rel="noopener" href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/">官方配置文档</a>。</p>
-<h1 id="2-运行Prometheus"><a href="#2-运行Prometheus" class="headerlink" title="2. 运行Prometheus"></a>2. 运行Prometheus</h1><p>要使用新创建的配置文件启动 Prometheus，请切换到包含 Prometheus 二进制文件的目录并运行：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> prometheus-*<br><br>./prometheus --config.file=prometheus.yml<br></code></pre></td></tr></table></figure>
-<p>Prometheus 应该启动了。您还应该能够在<a target="_blank" rel="noopener" href="http://localhost:9090/query">localhost:9090</a> 浏览有关其自身的状态页面。给它几秒钟时间从其自己的 HTTP 指标端点收集有关自身的数据。</p>
-<p><font color='red'>当然这里只是通过终端临时启动Prometheus，我们可以给它创建系统服务，以实现开机自动启动</font></p>
-<h1 id="3-创建Prometheus服务"><a href="#3-创建Prometheus服务" class="headerlink" title="3. 创建Prometheus服务"></a>3. 创建Prometheus服务</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cat</span> &lt;&lt; <span class="hljs-string">EOF &gt; /etc/systemd/system/prometheus.service</span><br><span class="hljs-string"></span><br><span class="hljs-string">[Unit]</span><br><span class="hljs-string">Description=Prometheus Monitoring System</span><br><span class="hljs-string">Wants=network-online.target</span><br><span class="hljs-string">After=network-online.target</span><br><span class="hljs-string"></span><br><span class="hljs-string">[Service]</span><br><span class="hljs-string">User=root</span><br><span class="hljs-string">ExecStart=/home/zcx/Downloads/prometheus-3.2.1.linux-amd64/prometheus --config.file=/home/zcx/Downloads/prometheus-3.2.1.linux-amd64/prometheus.yml</span><br><span class="hljs-string"></span><br><span class="hljs-string">[Install]</span><br><span class="hljs-string">WantedBy=default.target</span><br><span class="hljs-string"></span><br><span class="hljs-string">EOF</span><br></code></pre></td></tr></table></figure>
-<h1 id="4-启动Prometheus服务"><a href="#4-启动Prometheus服务" class="headerlink" title="4. 启动Prometheus服务"></a>4. 启动Prometheus服务</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#启动</span><br>systemctl start prometheus.service<br><br><span class="hljs-comment">#设置服务开机启动</span><br>systemctl <span class="hljs-built_in">enable</span> prometheus.service<br><br><span class="hljs-comment">#查看服务状态</span><br>systemctl status prometheus.service<br></code></pre></td></tr></table></figure>
-<p><em>那么现在可以继续访问使用Prometheus了</em></p>
+<h2 id="3-2-检测Ollama是否成功安装"><a href="#3-2-检测Ollama是否成功安装" class="headerlink" title="3.2. 检测Ollama是否成功安装"></a>3.2. 检测Ollama是否成功安装</h2><p>执行ollama -v如果返回版本号则安装成功。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ollama -v<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-3-通过Ollama拉取DeepSeek模型"><a href="#3-3-通过Ollama拉取DeepSeek模型" class="headerlink" title="3.3. 通过Ollama拉取DeepSeek模型"></a>3.3. 通过Ollama拉取DeepSeek模型</h2><p>结合我的配置考虑，这里我选择是的1.5b，整个模型大小1.1 GB。</p>
+<p>更多版本可以在这里查看：<a target="_blank" rel="noopener" href="https://ollama.com/library/deepseek-r1">https://ollama.com/library/deepseek-r1</a> 。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ollama run deepseek-r1:1.5b<br></code></pre></td></tr></table></figure>
+
+<p><em>终端输出</em></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs terminal">[zcx@archlinux Downloads]$ ollama run deepseek-r1:1.5b<br>pulling manifest <br>pulling aabd4debf0c8... 100% ▕██████████████████████████████████████████████████████████████████████████████████████████████▏ 1.1 GB                         <br>pulling 369ca498f347... 100% ▕██████████████████████████████████████████████████████████████████████████████████████████████▏  387 B                         <br>pulling 6e4c38e1172f... 100% ▕██████████████████████████████████████████████████████████████████████████████████████████████▏ 1.1 KB                         <br>pulling f4d24e9138dd... 100% ▕██████████████████████████████████████████████████████████████████████████████████████████████▏  148 B                         <br>pulling a85fe2a2e58e... 100% ▕██████████████████████████████████████████████████████████████████████████████████████████████▏  487 B                         <br>verifying sha256 digest <br>writing manifest <br>success <br>&gt;&gt;&gt; Send a message (/? for help)<br></code></pre></td></tr></table></figure>
+
+<p>看到success字样，代表成功安装DeepSeek-R1，然后就可以与DeepSeek对话了！</p>
 
                 
               </div>
@@ -309,7 +410,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Prometheus/" class="category-chain-item">Prometheus</a>
+  <a href="/categories/DeepSeek/" class="category-chain-item">DeepSeek</a>
   
   
 
@@ -324,7 +425,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Prometheus/" class="print-no-link">#Prometheus</a>
+        <a href="/tags/DeepSeek/" class="print-no-link">#DeepSeek</a>
       
     </div>
   
@@ -336,8 +437,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Prometheus</div>
-      <div>https://zcxx0322.github.io/2025/03/08/Prometheus/</div>
+      <div>本地部署DeepSeek-R1</div>
+      <div>https://zcxx0322.github.io/2025/03/11/本地部署DeepSeek-R1/</div>
     </div>
     <div class="license-meta">
       
@@ -349,7 +450,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月8日</div>
+          <div>2025年3月11日</div>
         </div>
       
       
@@ -374,18 +475,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/03/11/%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2DeepSeek-R1/" title="本地部署DeepSeek-R1">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">本地部署DeepSeek-R1</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/12/02/CentOS7%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/" title="CentOS7配置静态IP">
-                        <span class="hidden-mobile">CentOS7配置静态IP</span>
+                      <a href="/2025/03/08/Prometheus/" title="Prometheus">
+                        <span class="hidden-mobile">Prometheus</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
