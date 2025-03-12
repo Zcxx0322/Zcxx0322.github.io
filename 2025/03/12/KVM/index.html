@@ -19,24 +19,24 @@
   <meta name="author" content="Zcxx0322">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1. DeepSeek 模型规格表   模型版本 参数量 显存需求（FP16） 推荐 GPU（单卡） 多卡支持 量化支持 适用场景    DeepSeek-R1-1.5B 15亿 3GB GTX 1650（4GB显存） 无需 支持 低资源设备部署（树莓派、旧款笔记本）、实时文本生成、嵌入式系统   DeepSeek-R1-7B 70亿 14GB RTX 3070&#x2F;4060（8GB显存）">
+    <meta name="description" content="1. Archlinux使用KVM1.1. 安装KVM包安装运行KVM所需的所有软件包 123sudo pacman -Syysudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat dmidecode  1.2. 安装ebtbles和iptables1sudo pacman -S e">
 <meta property="og:type" content="article">
-<meta property="og:title" content="本地部署DeepSeek-R1">
-<meta property="og:url" content="https://zcxx0322.github.io/2025/03/11/%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2DeepSeek-R1/index.html">
+<meta property="og:title" content="KVM">
+<meta property="og:url" content="https://zcxx0322.github.io/2025/03/12/KVM/index.html">
 <meta property="og:site_name" content="系统工程师实战">
-<meta property="og:description" content="1. DeepSeek 模型规格表   模型版本 参数量 显存需求（FP16） 推荐 GPU（单卡） 多卡支持 量化支持 适用场景    DeepSeek-R1-1.5B 15亿 3GB GTX 1650（4GB显存） 无需 支持 低资源设备部署（树莓派、旧款笔记本）、实时文本生成、嵌入式系统   DeepSeek-R1-7B 70亿 14GB RTX 3070&#x2F;4060（8GB显存）">
+<meta property="og:description" content="1. Archlinux使用KVM1.1. 安装KVM包安装运行KVM所需的所有软件包 123sudo pacman -Syysudo pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat dmidecode  1.2. 安装ebtbles和iptables1sudo pacman -S e">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zcxx0322.github.io/img/deepseek+ollama.png">
-<meta property="article:published_time" content="2025-03-11T01:35:51.000Z">
-<meta property="article:modified_time" content="2025-03-12T03:10:00.401Z">
+<meta property="og:image" content="https://zcxx0322.github.io/img/kvm.png">
+<meta property="article:published_time" content="2025-03-12T03:09:50.000Z">
+<meta property="article:modified_time" content="2025-03-12T09:05:48.700Z">
 <meta property="article:author" content="Zcxx0322">
-<meta property="article:tag" content="DeepSeek">
+<meta property="article:tag" content="KVM">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://zcxx0322.github.io/img/deepseek+ollama.png">
+<meta name="twitter:image" content="https://zcxx0322.github.io/img/kvm.png">
   
   
   
-  <title>本地部署DeepSeek-R1 - 系统工程师实战</title>
+  <title>KVM - 系统工程师实战</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="本地部署DeepSeek-R1"></span>
+            <span id="subtitle" data-typed-text="KVM"></span>
           
         </div>
 
@@ -213,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-11 09:35" pubdate>
-          2025年3月11日 上午
+        <time datetime="2025-03-12 11:09" pubdate>
+          2025年3月12日 上午
         </time>
       </span>
     
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          627 字
+          298 字
         
       </span>
     
@@ -236,7 +236,7 @@
         
         
         
-          6 分钟
+          3 分钟
         
       </span>
     
@@ -273,127 +273,40 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">本地部署DeepSeek-R1</h1>
+            <h1 id="seo-header">KVM</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="1-DeepSeek-模型规格表"><a href="#1-DeepSeek-模型规格表" class="headerlink" title="1. DeepSeek 模型规格表"></a>1. DeepSeek 模型规格表</h1><table>
-<thead>
-<tr>
-<th>模型版本</th>
-<th>参数量</th>
-<th>显存需求（FP16）</th>
-<th>推荐 GPU（单卡）</th>
-<th>多卡支持</th>
-<th>量化支持</th>
-<th>适用场景</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>DeepSeek-R1-1.5B</td>
-<td>15亿</td>
-<td>3GB</td>
-<td>GTX 1650（4GB显存）</td>
-<td>无需</td>
-<td>支持</td>
-<td>低资源设备部署（树莓派、旧款笔记本）、实时文本生成、嵌入式系统</td>
-</tr>
-<tr>
-<td>DeepSeek-R1-7B</td>
-<td>70亿</td>
-<td>14GB</td>
-<td>RTX 3070&#x2F;4060（8GB显存）</td>
-<td>可选</td>
-<td>支持</td>
-<td>中等复杂度任务（文本摘要、翻译）、轻量级多轮对话系统</td>
-</tr>
-<tr>
-<td>DeepSeek-R1-8B</td>
-<td>80亿</td>
-<td>16GB</td>
-<td>RTX 4070（12GB显存）</td>
-<td>可选</td>
-<td>支持</td>
-<td>需更高精度的轻量级任务（代码生成、逻辑推理）</td>
-</tr>
-<tr>
-<td>DeepSeek-R1-14B</td>
-<td>140亿</td>
-<td>32GB</td>
-<td>RTX 4090&#x2F;A5000（16GB显存）</td>
-<td>推荐</td>
-<td>支持</td>
-<td>企业级复杂任务（合同分析、报告生成）、长文本理解与生成</td>
-</tr>
-<tr>
-<td>DeepSeek-R1-32B</td>
-<td>320亿</td>
-<td>64GB</td>
-<td>A100 40GB（24GB显存）</td>
-<td>推荐</td>
-<td>支持</td>
-<td>高精度专业领域任务（医疗&#x2F;法律咨询）、多模态任务预处理</td>
-</tr>
-<tr>
-<td>DeepSeek-R1-70B</td>
-<td>700亿</td>
-<td>140GB</td>
-<td>2x A100 80GB&#x2F;4x RTX 4090</td>
-<td>必需</td>
-<td>支持</td>
-<td>科研机构&#x2F;大型企业（金融预测、大规模数据分析）、高复杂度生成任务</td>
-</tr>
-<tr>
-<td>DeepSeek-671B</td>
-<td>6710亿</td>
-<td>512GB+</td>
-<td>8x A100&#x2F;H100（服务器集群）</td>
-<td>必需</td>
-<td>支持</td>
-<td>国家级&#x2F;超大规模 AI 研究（气候建模、基因组分析）、通用人工智能（AGI）探索</td>
-</tr>
-</tbody></table>
-<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><ul>
-<li><strong>显存需求</strong>基于FP16精度估算，实际使用可能因框架优化差异略有波动。</li>
-<li>​<strong>多卡支持</strong>标注为”推荐”的型号在单卡运行时可能面临显存限制。</li>
-<li>​<strong>量化支持</strong>包含4bit&#x2F;8bit等主流量化方案，可降低约30-70%显存占用。</li>
-<li>700B+级超大模型建议通过API调用方式使用，本地部署需专业运维团队支持。</li>
-</ul>
-<h1 id="2-教程演示硬件配置如下"><a href="#2-教程演示硬件配置如下" class="headerlink" title="2. 教程演示硬件配置如下"></a>2. 教程演示硬件配置如下</h1><pre><code class="hljs">OS: Arch Linux x86_64 
-Host: Z3 Air Series GK5MP5O 
-Kernel: 6.12.17-1-lts 
-Uptime: 14 mins 
-Packages: 840 (pacman) 
-Shell: bash 5.2.37 
-Resolution: 1920x1080 
-DE: GNOME 47.5 
-WM: Mutter 
-WM Theme: Adwaita 
-Theme: Adwaita [GTK2/3] 
-Icons: Adwaita [GTK2/3] 
-Terminal: gnome-terminal 
-CPU: Intel i5-10200H (8) @ 4.100GHz 
-GPU: NVIDIA GeForce GTX 1650 Mobile / Max-Q 
-GPU: Intel Comet Lake-H GT1 [UHD Graphics 610] 
-Memory: 4201MiB / 15829MiB
-</code></pre>
-<h1 id="3-部署过程"><a href="#3-部署过程" class="headerlink" title="3. 部署过程"></a>3. 部署过程</h1><h2 id="3-1-下载安装Ollama"><a href="#3-1-下载安装Ollama" class="headerlink" title="3.1. 下载安装Ollama"></a>3.1. 下载安装Ollama</h2><p>Ollama目前已支持MacOS,Linux,Windows，<a target="_blank" rel="noopener" href="https://ollama.com/download">Ollama官方下载地址</a></p>
-<hr>
-<p>Archlinux可以直接使用pacman命令安装。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> pacman -S ollama<br></code></pre></td></tr></table></figure>
+                <h1 id="1-Archlinux使用KVM"><a href="#1-Archlinux使用KVM" class="headerlink" title="1. Archlinux使用KVM"></a>1. Archlinux使用KVM</h1><h2 id="1-1-安装KVM包"><a href="#1-1-安装KVM包" class="headerlink" title="1.1. 安装KVM包"></a>1.1. 安装KVM包</h2><p>安装运行KVM所需的所有软件包</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> pacman -Syy<br><br><span class="hljs-built_in">sudo</span> pacman -S qemu virt-manager virt-viewer dnsmasq vde2 bridge-utils openbsd-netcat dmidecode<br></code></pre></td></tr></table></figure>
 
-<h2 id="3-2-检测Ollama是否成功安装"><a href="#3-2-检测Ollama是否成功安装" class="headerlink" title="3.2. 检测Ollama是否成功安装"></a>3.2. 检测Ollama是否成功安装</h2><p>执行ollama -v如果返回版本号则安装成功。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ollama -v<br></code></pre></td></tr></table></figure>
+<h2 id="1-2-安装ebtbles和iptables"><a href="#1-2-安装ebtbles和iptables" class="headerlink" title="1.2. 安装ebtbles和iptables"></a>1.2. 安装ebtbles和iptables</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> pacman -S ebtables iptables<br></code></pre></td></tr></table></figure>
 
-<h2 id="3-3-通过Ollama拉取DeepSeek模型"><a href="#3-3-通过Ollama拉取DeepSeek模型" class="headerlink" title="3.3. 通过Ollama拉取DeepSeek模型"></a>3.3. 通过Ollama拉取DeepSeek模型</h2><p>结合我的配置考虑，这里我选择是的1.5b，整个模型大小1.1 GB。</p>
-<p>更多版本可以在这里查看：<a target="_blank" rel="noopener" href="https://ollama.com/library/deepseek-r1">https://ollama.com/library/deepseek-r1</a> 。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">ollama run deepseek-r1:1.5b<br></code></pre></td></tr></table></figure>
+<h2 id="1-3-启动KVM-libvirt服务"><a href="#1-3-启动KVM-libvirt服务" class="headerlink" title="1.3. 启动KVM libvirt服务"></a>1.3. 启动KVM libvirt服务</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl <span class="hljs-built_in">enable</span> libvirtd.service<br><br>systemctl start libvirtd.service<br><br>systemctl status libvirtd.service<br></code></pre></td></tr></table></figure>
 
-<p><em>终端输出</em></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs terminal">[zcx@archlinux Downloads]$ ollama run deepseek-r1:1.5b<br>pulling manifest <br>pulling aabd4debf0c8... 100% ▕██████████████████████████████████████████████████████████████████████████████████████████████▏ 1.1 GB                         <br>pulling 369ca498f347... 100% ▕██████████████████████████████████████████████████████████████████████████████████████████████▏  387 B                         <br>pulling 6e4c38e1172f... 100% ▕██████████████████████████████████████████████████████████████████████████████████████████████▏ 1.1 KB                         <br>pulling f4d24e9138dd... 100% ▕██████████████████████████████████████████████████████████████████████████████████████████████▏  148 B                         <br>pulling a85fe2a2e58e... 100% ▕██████████████████████████████████████████████████████████████████████████████████████████████▏  487 B                         <br>verifying sha256 digest <br>writing manifest <br>success <br>&gt;&gt;&gt; Send a message (/? for help)<br></code></pre></td></tr></table></figure>
+<h2 id="1-4-设置网桥"><a href="#1-4-设置网桥" class="headerlink" title="1.4. 设置网桥"></a>1.4. 设置网桥</h2><p>安装后会生成一个默认网桥配置文件&#x2F;etc&#x2F;libvirt&#x2F;qemu&#x2F;networks&#x2F;default.xml，但是默认处于不活跃状态！需要手动启用！</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 定义网桥</span><br><span class="hljs-built_in">sudo</span> virsh net-define /etc/libvirt/qemu/networks/default.xml<br><br><span class="hljs-comment"># 启动网桥</span><br><span class="hljs-built_in">sudo</span> virsh net-start default<br><br><span class="hljs-comment"># 设置网桥开机启动</span><br><span class="hljs-built_in">sudo</span> virsh net-autostart default<br><br><span class="hljs-comment"># 查看网桥状态 </span><br>brctl show<br></code></pre></td></tr></table></figure>
 
-<p>看到success字样，代表成功安装DeepSeek-R1，然后就可以与DeepSeek对话了！</p>
+<h1 id="2-常用命令"><a href="#2-常用命令" class="headerlink" title="2. 常用命令"></a>2. 常用命令</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 进入root</span><br>su<br><br><span class="hljs-comment"># 创建虚拟磁盘</span><br>qemu-img create -f qcow2 /var/lib/libvirt/images/vm1 10G<br><br><span class="hljs-comment"># 创建虚拟机</span><br>virt-install \<br>--name vm1 \<br>--ram 4096 \<br>--disk path=/var/lib/libvirt/images/vm1.img,size=10 \<br>--vcpus 4 \<br>--cpu host-model,topology.sockets=1,topology.cores=4,topology.threads=1 \<br>--os-variant centos7 \<br>--network bridge=virbr0 \<br>--console pty,target_type=serial \<br>--cdrom=/var/lib/libvirt/images/CentOS-7-x86_64-Minimal-2009.iso \<br>--graphics vnc,password=geek,port=-1,listen=0.0.0.0<br><br><span class="hljs-comment"># 列出已创建的虚拟机</span><br>virsh list --all<br><br><span class="hljs-comment"># 启动虚拟机</span><br>virsh start vm1<br><br><span class="hljs-comment"># 开机启动虚拟机</span><br>virsh autostart vm1<br><br><span class="hljs-comment"># 关闭虚拟机</span><br>virsh destroy vm1<br><br><span class="hljs-comment"># 导出虚拟机配置</span><br>virsh dumpxml vm1 &gt; vm1.xml<br><br><span class="hljs-comment"># 从xml文件定义虚拟机</span><br>virsh define vm1.xml<br><br><span class="hljs-comment"># 取消定义虚拟机</span><br>virsh undefine vm1.xml<br><br><span class="hljs-comment"># 如果创建了虚拟机而忘记记录IP，可以用这条命令连接虚拟机</span><br>virt-viewer -c qemu:///system vm1<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 
               </div>
@@ -412,7 +325,7 @@ Memory: 4201MiB / 15829MiB
     
       <span class="category-chain">
         
-  <a href="/categories/DeepSeek/" class="category-chain-item">DeepSeek</a>
+  <a href="/categories/KVM/" class="category-chain-item">KVM</a>
   
   
 
@@ -427,7 +340,7 @@ Memory: 4201MiB / 15829MiB
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/DeepSeek/" class="print-no-link">#DeepSeek</a>
+        <a href="/tags/KVM/" class="print-no-link">#KVM</a>
       
     </div>
   
@@ -439,8 +352,8 @@ Memory: 4201MiB / 15829MiB
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>本地部署DeepSeek-R1</div>
-      <div>https://zcxx0322.github.io/2025/03/11/本地部署DeepSeek-R1/</div>
+      <div>KVM</div>
+      <div>https://zcxx0322.github.io/2025/03/12/KVM/</div>
     </div>
     <div class="license-meta">
       
@@ -452,7 +365,7 @@ Memory: 4201MiB / 15829MiB
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月11日</div>
+          <div>2025年3月12日</div>
         </div>
       
       
@@ -477,18 +390,12 @@ Memory: 4201MiB / 15829MiB
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/03/12/KVM/" title="KVM">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">KVM</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/03/08/Prometheus/" title="Prometheus">
-                        <span class="hidden-mobile">Prometheus</span>
+                      <a href="/2025/03/11/%E6%9C%AC%E5%9C%B0%E9%83%A8%E7%BD%B2DeepSeek-R1/" title="本地部署DeepSeek-R1">
+                        <span class="hidden-mobile">本地部署DeepSeek-R1</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
