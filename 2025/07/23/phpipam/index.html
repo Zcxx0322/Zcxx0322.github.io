@@ -19,24 +19,24 @@
   <meta name="author" content="Zcxx0322">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1. 安装Mysql1.1 Archlinux1.1.1. 安装并初始化Mysql123sudo pacman -S mysqlsudo mysqld --initialize --user&#x3D;mysql --basedir&#x3D;&#x2F;usr --datadir&#x3D;&#x2F;var&#x2F;lib&#x2F;mysql  观察终端输出可以发现初始化完成后，随机生成了初始帐号密码：  root@localhost o,FRbratO8U">
+    <meta name="description" content="1. 简介phpipam 是一款开源的 Web IP 地址管理应用程序 (IPAM)。其目标是提供轻量、现代且实用的 IP 地址管理。 2. 环境准备 CentOS7  系统镜像下载：https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;centos&#x2F;7&#x2F;isos&#x2F;x86_64&#x2F; 系统初始化配置（可选）：https:&#x2F;&#x2F;zcxx0322.github.io&#x2F;2024&#x2F;11&#x2F;21&#x2F;%E5%88%9D">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mysql">
-<meta property="og:url" content="https://zcxx0322.github.io/2025/03/14/Mysql/index.html">
+<meta property="og:title" content="phpipam">
+<meta property="og:url" content="https://zcxx0322.github.io/2025/07/23/phpipam/index.html">
 <meta property="og:site_name" content="系统工程师实战">
-<meta property="og:description" content="1. 安装Mysql1.1 Archlinux1.1.1. 安装并初始化Mysql123sudo pacman -S mysqlsudo mysqld --initialize --user&#x3D;mysql --basedir&#x3D;&#x2F;usr --datadir&#x3D;&#x2F;var&#x2F;lib&#x2F;mysql  观察终端输出可以发现初始化完成后，随机生成了初始帐号密码：  root@localhost o,FRbratO8U">
+<meta property="og:description" content="1. 简介phpipam 是一款开源的 Web IP 地址管理应用程序 (IPAM)。其目标是提供轻量、现代且实用的 IP 地址管理。 2. 环境准备 CentOS7  系统镜像下载：https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;centos&#x2F;7&#x2F;isos&#x2F;x86_64&#x2F; 系统初始化配置（可选）：https:&#x2F;&#x2F;zcxx0322.github.io&#x2F;2024&#x2F;11&#x2F;21&#x2F;%E5%88%9D">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://zcxx0322.github.io/img/Mysql.png">
-<meta property="article:published_time" content="2025-03-14T02:35:03.000Z">
-<meta property="article:modified_time" content="2025-07-23T02:32:33.179Z">
+<meta property="og:image" content="https://zcxx0322.github.io/img/phpipam.jpg">
+<meta property="article:published_time" content="2025-07-23T03:03:35.000Z">
+<meta property="article:modified_time" content="2025-07-23T06:21:05.667Z">
 <meta property="article:author" content="Zcxx0322">
-<meta property="article:tag" content="Mysql">
+<meta property="article:tag" content="phpipam">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://zcxx0322.github.io/img/Mysql.png">
+<meta name="twitter:image" content="https://zcxx0322.github.io/img/phpipam.jpg">
   
   
   
-  <title>Mysql - 系统工程师实战</title>
+  <title>phpipam - 系统工程师实战</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Mysql"></span>
+            <span id="subtitle" data-typed-text="phpipam"></span>
           
         </div>
 
@@ -213,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-14 10:35" pubdate>
-          2025年3月14日 上午
+        <time datetime="2025-07-23 11:03" pubdate>
+          2025年7月23日 上午
         </time>
       </span>
     
@@ -225,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          818 字
+          835 字
         
       </span>
     
@@ -273,74 +273,75 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Mysql</h1>
+            <h1 id="seo-header">phpipam</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="1-安装Mysql"><a href="#1-安装Mysql" class="headerlink" title="1. 安装Mysql"></a>1. 安装Mysql</h1><h2 id="1-1-Archlinux"><a href="#1-1-Archlinux" class="headerlink" title="1.1 Archlinux"></a>1.1 Archlinux</h2><h3 id="1-1-1-安装并初始化Mysql"><a href="#1-1-1-安装并初始化Mysql" class="headerlink" title="1.1.1. 安装并初始化Mysql"></a>1.1.1. 安装并初始化Mysql</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> pacman -S mysql<br><br><span class="hljs-built_in">sudo</span> mysqld --initialize --user=mysql --basedir=/usr --datadir=/var/lib/mysql<br></code></pre></td></tr></table></figure>
-
-<p>观察终端输出可以发现初始化完成后，随机生成了初始帐号密码：</p>
+                <h1 id="1-简介"><a href="#1-简介" class="headerlink" title="1. 简介"></a>1. 简介</h1><p>phpipam 是一款开源的 Web IP 地址管理应用程序 (IPAM)。其目标是提供轻量、现代且实用的 IP 地址管理。</p>
+<h1 id="2-环境准备"><a href="#2-环境准备" class="headerlink" title="2. 环境准备"></a>2. 环境准备</h1><ul>
+<li><p>CentOS7</p>
 <ul>
-<li>root@localhost</li>
-<li>o,FRbratO8U6<br>帐号密码是随即生成的，请注意自行保存，后面有用！</li>
+<li>系统镜像下载：<a target="_blank" rel="noopener" href="https://mirrors.aliyun.com/centos/7/isos/x86_64/">https://mirrors.aliyun.com/centos/7/isos/x86_64/</a></li>
+<li>系统初始化配置（可选）：<a href="https://zcxx0322.github.io/2024/11/21/%E5%88%9D%E5%A7%8B%E5%8C%96%E9%85%8D%E7%BD%AECentOS7/">https://zcxx0322.github.io/2024/11/21/%E5%88%9D%E5%A7%8B%E5%8C%96%E9%85%8D%E7%BD%AECentOS7/</a></li>
 </ul>
-<p><font color=red><em>终端输出</em></font></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs terminal">2025-03-14T02:41:41.212250Z 0 [System] [MY-015017] [Server] MySQL Server Initialization - start.<br>2025-03-14T02:41:41.213204Z 0 [Warning] [MY-010915] [Server] &#x27;NO_ZERO_DATE&#x27;, &#x27;NO_ZERO_IN_DATE&#x27; and &#x27;ERROR_FOR_DIVISION_BY_ZERO&#x27; sql modes should be used with strict mode. They will be merged with strict mode in a future release.<br>2025-03-14T02:41:41.213243Z 0 [System] [MY-013169] [Server] /usr/bin/mysqld (mysqld 9.2.0) initializing of server in progress as process 19340<br>2025-03-14T02:41:41.225654Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.<br>2025-03-14T02:41:41.492273Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.<br>2025-03-14T02:41:42.326345Z 6 [Note] [MY-010454] [Server] A temporary password is generated for root@localhost: o,FRbratO8U6<br>2025-03-14T02:41:44.238961Z 0 [System] [MY-015018] [Server] MySQL Server Initialization - end.<br>[zcx@archlinux LogBuild]$ grep &#x27;temporary password&#x27; /var/log/mysqld.log<br></code></pre></td></tr></table></figure>
-
-<h3 id="1-1-2-启动Mysql服务"><a href="#1-1-2-启动Mysql服务" class="headerlink" title="1.1.2. 启动Mysql服务"></a>1.1.2. 启动Mysql服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl start mysqld.service<br><br>systemctl status mysqld.service<br><br>systemctl <span class="hljs-built_in">enable</span> mysqld.service<br></code></pre></td></tr></table></figure>
-
-<h3 id="1-1-3-登陆Mysql"><a href="#1-1-3-登陆Mysql" class="headerlink" title="1.1.3. 登陆Mysql"></a>1.1.3. 登陆Mysql</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 输入密码即可</span><br>mysql -u root -p <br>Enter password:<br></code></pre></td></tr></table></figure>
-
-<h3 id="1-1-4-修改root密码"><a href="#1-1-4-修改root密码" class="headerlink" title="1.1.4. 修改root密码"></a>1.1.4. 修改root密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">alter user <span class="hljs-string">&#x27;root&#x27;</span>@<span class="hljs-string">&#x27;localhost&#x27;</span> identified by <span class="hljs-string">&#x27;geek&#x27;</span>;<br></code></pre></td></tr></table></figure>
-<p><font color=red>下次登陆时，使用更改后的密码即可！</font></p>
-<h2 id="1-2-CentOS"><a href="#1-2-CentOS" class="headerlink" title="1.2. CentOS"></a>1.2. CentOS</h2><h3 id="1-2-1-新增Yum仓库"><a href="#1-2-1-新增Yum仓库" class="headerlink" title="1.2.1. 新增Yum仓库"></a>1.2.1. 新增Yum仓库</h3><p><em>新增仓库</em></p>
+</li>
+<li><p>phpipam</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/phpipam/phpipam/releases/download/v1.7.3/phpipam-v1.7.3.tgz">https://github.com/phpipam/phpipam/releases/download/v1.7.3/phpipam-v1.7.3.tgz</a></li>
+</ul>
+</li>
+<li><p>Mysql5.7</p>
+</li>
+<li><p>Apache</p>
+</li>
+<li><p>PHP7.4+</p>
+</li>
+</ul>
+<h1 id="3-Mysql"><a href="#3-Mysql" class="headerlink" title="3. Mysql"></a>3. Mysql</h1><h2 id="3-1-新增Yum仓库"><a href="#3-1-新增Yum仓库" class="headerlink" title="3.1. 新增Yum仓库"></a>3.1. 新增Yum仓库</h2><p><em><strong>新增仓库</strong></em></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum install -y https://dev.mysql.com/get/mysql80-community-release-el7-7.noarch.rpm<br></code></pre></td></tr></table></figure>
 
-<p><em>导入公钥</em></p>
+<p>*** 导入公钥***</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-mysql*<br></code></pre></td></tr></table></figure>
 
-<p><em>默认禁用MySQL仓库</em></p>
+<p>*** 默认禁用MySQL仓库***</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum-config-manager --<span class="hljs-built_in">disable</span> mysql-connectors-community | egrep <span class="hljs-string">&#x27;(\[mysql-connectors-community\])|enabled&#x27;</span><br>yum-config-manager --<span class="hljs-built_in">disable</span> mysql-tools-community | egrep <span class="hljs-string">&#x27;(\[mysql-tools-community\])|enabled&#x27;</span><br>yum-config-manager --<span class="hljs-built_in">disable</span> mysql80-community | egrep <span class="hljs-string">&#x27;(\[mysql80-community\])|enabled&#x27;</span><br></code></pre></td></tr></table></figure>
 
-<h3 id="1-2-2-安装Mysql5-7"><a href="#1-2-2-安装Mysql5-7" class="headerlink" title="1.2.2. 安装Mysql5.7"></a>1.2.2. 安装Mysql5.7</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum --enablerepo=mysql57-community install -y mysql-community-server<br></code></pre></td></tr></table></figure>
+<h2 id="3-2-安装Mysql5-7"><a href="#3-2-安装Mysql5-7" class="headerlink" title="3.2. 安装Mysql5.7"></a>3.2. 安装Mysql5.7</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">yum --enablerepo=mysql57-community install -y mysql-community-server<br></code></pre></td></tr></table></figure>
 
-<h3 id="1-2-3-初始化Mysql5-7"><a href="#1-2-3-初始化Mysql5-7" class="headerlink" title="1.2.3. 初始化Mysql5.7"></a>1.2.3. 初始化Mysql5.7</h3><p><em>设置日志</em></p>
+<h2 id="3-3-初始化Mysql5-7"><a href="#3-3-初始化Mysql5-7" class="headerlink" title="3.3. 初始化Mysql5.7"></a>3.3. 初始化Mysql5.7</h2><p><em><strong>设置日志</strong></em></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p /var/log/mysqld<br><span class="hljs-built_in">touch</span> /var/log/mysqld/error.log<br><span class="hljs-built_in">chown</span> -R mysql:mysql /var/log/mysqld<br><br>crudini --<span class="hljs-built_in">set</span> --existing /etc/my.cnf mysqld log-error /var/log/mysqld/error.log<br></code></pre></td></tr></table></figure>
 
-<p><em>设置MySQL数据目录</em></p>
+<p><em><strong>设置MySQL数据目录</strong></em></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> -p /data/mysql<br><br>crudini --<span class="hljs-built_in">set</span> --existing /etc/my.cnf mysqld datadir /data/mysql<br></code></pre></td></tr></table></figure>
 
-<h3 id="1-2-4-配置Mysql5-7"><a href="#1-2-4-配置Mysql5-7" class="headerlink" title="1.2.4. 配置Mysql5.7"></a>1.2.4. 配置Mysql5.7</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs bash">crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld default-storage-engine InnoDB<br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld disabled_storage_engines <span class="hljs-string">&#x27;&quot;MyISAM&quot;&#x27;</span><br><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld bind-address 0.0.0.0<br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld max_connections 1000<br><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld general_log OFF<br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld general_log_file /var/log/mysqld/general.log<br><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld long_query_time 3<br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld slow_query_log ON<br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld slow_query_log_file /var/log/mysqld/slow_query.log<br><br><span class="hljs-comment"># 开启兼容模式，兼容老MySQL代码，比如使用空字符串代替NULL插入数据</span><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld sql_mode <span class="hljs-string">&#x27;&quot;&quot;&#x27;</span><br><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld skip-name-resolve <span class="hljs-string">&#x27;OFF&#x27;</span><br><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqldump max_allowed_packet 100M<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;quick&quot;</span> &gt;&gt; /etc/my.cnf<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;quote-names&quot;</span> &gt;&gt; /etc/my.cnf<br></code></pre></td></tr></table></figure>
+<h2 id="3-4-配置Mysql5-7"><a href="#3-4-配置Mysql5-7" class="headerlink" title="3.4. 配置Mysql5.7"></a>3.4. 配置Mysql5.7</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs bash">crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld default-storage-engine InnoDB<br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld disabled_storage_engines <span class="hljs-string">&#x27;&quot;MyISAM&quot;&#x27;</span><br><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld bind-address 0.0.0.0<br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld max_connections 1000<br><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld general_log OFF<br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld general_log_file /var/log/mysqld/general.log<br><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld long_query_time 3<br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld slow_query_log ON<br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld slow_query_log_file /var/log/mysqld/slow_query.log<br><br><span class="hljs-comment"># 开启兼容模式，兼容老MySQL代码，比如使用空字符串代替NULL插入数据</span><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld sql_mode <span class="hljs-string">&#x27;&quot;&quot;&#x27;</span><br><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqld skip-name-resolve <span class="hljs-string">&#x27;OFF&#x27;</span><br><br>crudini --<span class="hljs-built_in">set</span> /etc/my.cnf mysqldump max_allowed_packet 100M<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;quick&quot;</span> &gt;&gt; /etc/my.cnf<br><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;quote-names&quot;</span> &gt;&gt; /etc/my.cnf<br></code></pre></td></tr></table></figure>
 
-<h3 id="1-2-5-启动Mysql5-7"><a href="#1-2-5-启动Mysql5-7" class="headerlink" title="1.2.5. 启动Mysql5.7"></a>1.2.5. 启动Mysql5.7</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl <span class="hljs-built_in">enable</span> mysqld<br><br>systemctl start mysqld<br><br>systemctl status mysqld<br></code></pre></td></tr></table></figure>
+<h2 id="3-5-启动Mysql5-7"><a href="#3-5-启动Mysql5-7" class="headerlink" title="3.5. 启动Mysql5.7"></a>3.5. 启动Mysql5.7</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">systemctl <span class="hljs-built_in">enable</span> mysqld<br><br>systemctl start mysqld<br><br>systemctl status mysqld<br></code></pre></td></tr></table></figure>
 
-<h3 id="1-2-6-修改密码"><a href="#1-2-6-修改密码" class="headerlink" title="1.2.6. 修改密码"></a>1.2.6. 修改密码</h3><p><em>临时密码有不常用的特殊字符，不便日常管理。不降低安全性的前提性，更改MySQL密码</em></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">MYSQL_TMP_ROOT_PASSWORD=$(grep <span class="hljs-string">&#x27;A temporary password&#x27;</span> /var/log/mysqld/error.log | <span class="hljs-built_in">tail</span> -n 1 | awk <span class="hljs-string">&#x27;&#123;print $NF&#125;&#x27;</span>)<br><br><span class="hljs-built_in">export</span> BY_MYSQL_ROOT_PASSWORD=$(pwgen -csnB 10)_$(pwgen -csnB 10)<br><span class="hljs-comment"># 永久保存临时配置（重新登录或重启都有效）</span><br>sed -i <span class="hljs-string">&#x27;/export BY_/d&#x27;</span> ~/.bash_profile &amp;&amp; <span class="hljs-built_in">env</span> | grep BY_ | awk <span class="hljs-string">&#x27;&#123;print &quot;export &quot;$1&#125;&#x27;</span> &gt;&gt; ~/.bash_profile<br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;  MySQL用户名：root\nMySQL临时密码：<span class="hljs-variable">$&#123;MYSQL_TMP_ROOT_PASSWORD&#125;</span>\n  MySQL新密码：<span class="hljs-variable">$&#123;BY_MYSQL_ROOT_PASSWORD&#125;</span>&quot;</span><br><br>mysqladmin -uroot -p<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;MYSQL_TMP_ROOT_PASSWORD&#125;</span>&quot;</span> password <span class="hljs-variable">$&#123;BY_MYSQL_ROOT_PASSWORD&#125;</span><br></code></pre></td></tr></table></figure>
+<h2 id="3-6-配置Mysql密码"><a href="#3-6-配置Mysql密码" class="headerlink" title="3.6. 配置Mysql密码"></a>3.6. 配置Mysql密码</h2><p><em><strong>临时密码有不常用的特殊字符，不便日常管理。不降低安全性的前提性，更改MySQL密码</strong></em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">MYSQL_TMP_ROOT_PASSWORD=$(grep <span class="hljs-string">&#x27;A temporary password&#x27;</span> /var/log/mysqld/error.log | <span class="hljs-built_in">tail</span> -n 1 | awk <span class="hljs-string">&#x27;&#123;print $NF&#125;&#x27;</span>)<br><br><span class="hljs-built_in">export</span> BY_MYSQL_ROOT_PASSWORD=geek<br><span class="hljs-comment"># 永久保存临时配置（重新登录或重启都有效）</span><br>sed -i <span class="hljs-string">&#x27;/export BY_/d&#x27;</span> ~/.bash_profile &amp;&amp; <span class="hljs-built_in">env</span> | grep BY_ | awk <span class="hljs-string">&#x27;&#123;print &quot;export &quot;$1&#125;&#x27;</span> &gt;&gt; ~/.bash_profile<br><br><span class="hljs-built_in">echo</span> -e <span class="hljs-string">&quot;  MySQL用户名：root\nMySQL临时密码：<span class="hljs-variable">$&#123;MYSQL_TMP_ROOT_PASSWORD&#125;</span>\n  MySQL新密码：<span class="hljs-variable">$&#123;BY_MYSQL_ROOT_PASSWORD&#125;</span>&quot;</span><br><br>mysqladmin -uroot -p<span class="hljs-string">&quot;<span class="hljs-variable">$&#123;MYSQL_TMP_ROOT_PASSWORD&#125;</span>&quot;</span> password <span class="hljs-variable">$&#123;BY_MYSQL_ROOT_PASSWORD&#125;</span><br></code></pre></td></tr></table></figure>
 
-<p><em><font color=red>终端输出</font></em></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs terminal">MySQL用户名：root<br>MySQL临时密码：caJ&lt;TYnjX8iC<br>MySQL新密码：kdp3VnTup4_d4P3aa3m4q<br></code></pre></td></tr></table></figure>
+<p><em>终端输出</em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">MySQL用户名：root<br>MySQL临时密码：caJ&lt;TYnjX8iC<br>MySQL新密码：geek<br></code></pre></td></tr></table></figure>
 
-<h3 id="1-2-7-本机无密码配置"><a href="#1-2-7-本机无密码配置" class="headerlink" title="1.2.7. 本机无密码配置"></a>1.2.7. 本机无密码配置</h3><p><em>脚本无人化配置（自动输入密码）</em></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">unbuffer expect -c <span class="hljs-string">&quot;</span><br><span class="hljs-string">spawn mysql_config_editor set --skip-warn --login-path=client --host=localhost --user=root --password</span><br><span class="hljs-string">expect -nocase \&quot;Enter password:\&quot; &#123;send \&quot;<span class="hljs-variable">$&#123;BY_MYSQL_ROOT_PASSWORD&#125;</span>\n\&quot;; interact&#125;</span><br><span class="hljs-string">&quot;</span><br></code></pre></td></tr></table></figure>
+<h2 id="3-7-修改Mysql密码策略"><a href="#3-7-修改Mysql密码策略" class="headerlink" title="3.7. 修改Mysql密码策略"></a>3.7. 修改Mysql密码策略</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mysql">set global validate_password_policy=0;<br>set global validate_password_length=0;<br></code></pre></td></tr></table></figure>
 
-<p><em><font color=red>终端输出</font></em></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs terminal">spawn mysql_config_editor set --skip-warn --login-path=client --host=localhost --user=root --password<br>Enter password: <br></code></pre></td></tr></table></figure>
+<h2 id="3-8-创建phpipam用户-数据库"><a href="#3-8-创建phpipam用户-数据库" class="headerlink" title="3.8. 创建phpipam用户&#x2F;数据库"></a>3.8. 创建phpipam用户&#x2F;数据库</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs mysql">CREATE DATABASE phpipam;<br>CREATE USER &#x27;phpipam&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;geek&#x27;;<br>GRANT ALL PRIVILEGES ON phpipam.* TO &#x27;phpipam&#x27;@&#x27;localhost&#x27;;	<br>GRANT ALL PRIVILEGES ON *.* TO &#x27;phpipam&#x27;@&#x27;本机IP&#x27; IDENTIFIED BY &#x27;geek&#x27; WITH GRANT OPTION; <br>FLUSH PRIVILEGES;<br>EXIT;<br></code></pre></td></tr></table></figure>
 
-<p><em>查看MySQL无密码配置清单</em></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql_config_editor <span class="hljs-built_in">print</span> --all<br></code></pre></td></tr></table></figure>
+<h1 id="4-Apache"><a href="#4-Apache" class="headerlink" title="4. Apache"></a>4. Apache</h1><h2 id="4-1-安装httpd"><a href="#4-1-安装httpd" class="headerlink" title="4.1. 安装httpd"></a>4.1. 安装httpd</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> yum install httpd -y<br><span class="hljs-built_in">sudo</span> systemctl <span class="hljs-built_in">enable</span> --now httpd<br></code></pre></td></tr></table></figure>
 
-<p><em><font color=red>终端输出</font></em></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs terminal">[client]<br>user = root<br>password = *****<br>host = localhost<br></code></pre></td></tr></table></figure>
+<h2 id="4-2-配置httpd"><a href="#4-2-配置httpd" class="headerlink" title="4.2. 配置httpd"></a>4.2. 配置httpd</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs bash">vim /etc/httpd/conf.d/phpipam.conf<br><br>&lt;VirtualHost *:80&gt;<br>    ServerName 修改为想要的IP地址<br>    DocumentRoot /var/www/html/phpipam<br>    &lt;Directory /var/www/html/phpipam&gt;<br>        Options FollowSymLinks<br>        AllowOverride All<br>        Require all granted<br>    &lt;/Directory&gt;<br>    ErrorLog /var/log/httpd/phpipam_error.log<br>    CustomLog /var/log/httpd/phpipam_access.log combined<br>&lt;/VirtualHost&gt;<br><br><span class="hljs-comment"># 重启httpd服务</span><br><span class="hljs-built_in">sudo</span> systemctl restart httpd<br></code></pre></td></tr></table></figure>
 
-<p><em><font color=red>无密码登录测试</font></em></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql -e <span class="hljs-string">&quot;show databases;&quot;</span><br></code></pre></td></tr></table></figure>
+<h1 id="5-PHP"><a href="#5-PHP" class="headerlink" title="5. PHP"></a>5. PHP</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> yum install epel-release -y<br><span class="hljs-built_in">sudo</span> yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y<br><span class="hljs-built_in">sudo</span> yum-config-manager --<span class="hljs-built_in">enable</span> remi-php74  <span class="hljs-comment"># 启用 PHP 7.4</span><br><span class="hljs-built_in">sudo</span> yum install php php-cli php-mysqlnd php-json php-gd php-ldap php-curl php-zip php-mbstring php-xml php-bcmath php-gmp php-pear -y<br></code></pre></td></tr></table></figure>
 
-<h3 id="1-2-8-卸载密码插件-可选"><a href="#1-2-8-卸载密码插件-可选" class="headerlink" title="1.2.8. 卸载密码插件(可选)"></a>1.2.8. 卸载密码插件(可选)</h3><p><em>默认的密码复杂度要求太高可以卸载它</em></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">mysql -e <span class="hljs-string">&quot;uninstall plugin validate_password;&quot;</span><br></code></pre></td></tr></table></figure>
+<h1 id="6-phpipam"><a href="#6-phpipam" class="headerlink" title="6. phpipam"></a>6. phpipam</h1><h2 id="6-1-下载phpipam"><a href="#6-1-下载phpipam" class="headerlink" title="6.1. 下载phpipam"></a>6.1. 下载phpipam</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /tmp<br>wget -c https://github.com/phpipam/phpipam/releases/download/v1.7.3/phpipam-v1.7.3.tgz <br>tar -xzvf phpipam-v1.7.3.tgz<br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">mv</span> phpipam /var/www/html/<br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">chown</span> -R apache:apache /var/www/html/phpipam<br></code></pre></td></tr></table></figure>
 
+<h2 id="6-2-配置phpipam"><a href="#6-2-配置phpipam" class="headerlink" title="6.2. 配置phpipam"></a>6.2. 配置phpipam</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cp</span> /var/www/html/phpipam/config.dist.php /var/www/html/phpipam/config.php<br>vim  /var/www/html/phpipam/config.php<br><br><span class="hljs-variable">$db</span>[<span class="hljs-string">&#x27;host&#x27;</span>] = <span class="hljs-string">&#x27;虚拟机IP&#x27;</span>; // 使用虚拟机实际IP <br><br><span class="hljs-variable">$db</span>[<span class="hljs-string">&#x27;user&#x27;</span>] = <span class="hljs-string">&#x27;phpipam&#x27;</span>;         // 专用用户 <br><br><span class="hljs-variable">$db</span>[<span class="hljs-string">&#x27;pass&#x27;</span>] = <span class="hljs-string">&#x27;geek&#x27;</span>; <br><br><span class="hljs-variable">$db</span>[<span class="hljs-string">&#x27;name&#x27;</span>] = <span class="hljs-string">&#x27;phpipam&#x27;</span><br></code></pre></td></tr></table></figure>
 
+<h1 id="7-关闭SELinux和防火墙"><a href="#7-关闭SELinux和防火墙" class="headerlink" title="7. 关闭SELinux和防火墙"></a>7. 关闭SELinux和防火墙</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> SELINUX=disabled&gt;/etc/selinux/config<br><span class="hljs-built_in">echo</span> SELINUXTYPE=targeted&gt;&gt;/etc/selinux/config<br><br>systemctl <span class="hljs-built_in">disable</span> firewalld<br>systemctl stop firewalld<br><br><span class="hljs-comment"># 重启虚拟机</span><br>reboot<br></code></pre></td></tr></table></figure>
 
+<h1 id="8-访问phpipam"><a href="#8-访问phpipam" class="headerlink" title="8. 访问phpipam"></a>8. 访问phpipam</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">http://虚拟机IP/phpipam/<br></code></pre></td></tr></table></figure>
 
 
 
@@ -364,7 +365,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Mysql/" class="category-chain-item">Mysql</a>
+  <a href="/categories/phpipam/" class="category-chain-item">phpipam</a>
   
   
 
@@ -379,7 +380,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Mysql/" class="print-no-link">#Mysql</a>
+        <a href="/tags/phpipam/" class="print-no-link">#phpipam</a>
       
     </div>
   
@@ -391,8 +392,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Mysql</div>
-      <div>https://zcxx0322.github.io/2025/03/14/Mysql/</div>
+      <div>phpipam</div>
+      <div>https://zcxx0322.github.io/2025/07/23/phpipam/</div>
     </div>
     <div class="license-meta">
       
@@ -404,7 +405,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月14日</div>
+          <div>2025年7月23日</div>
         </div>
       
       
@@ -429,18 +430,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/07/23/phpipam/" title="phpipam">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">phpipam</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/03/12/KVM/" title="KVM">
-                        <span class="hidden-mobile">KVM</span>
+                      <a href="/2025/03/14/Mysql/" title="Mysql">
+                        <span class="hidden-mobile">Mysql</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
