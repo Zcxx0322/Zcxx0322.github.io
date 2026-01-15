@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="Zcxx0322" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      Zabbix 
+      
+      
+      |
+    
+     Zcxx0322运维杂记
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/img/zcxx0322.png">
+    <link rel="icon" href="/img/icon.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+
+  
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 8.1.1"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a target="_blank" rel="noopener" href="https://github.com/Zcxx0322">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/img/zcxx0322.png" alt="">
+      
+    </a>
+    <div class="nickname"><a target="_blank" rel="noopener" href="https://github.com/Zcxx0322">Zcxx0322</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">关于</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Zabbix</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2025-12-25 01:38:17
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Zabbix/" title="Zabbix">
+                    #Zabbix
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="Zabbix安装配置"><a href="#Zabbix安装配置" class="headerlink" title="Zabbix安装配置"></a>Zabbix安装配置</h1><h2 id="1-架构概览"><a href="#1-架构概览" class="headerlink" title="1. 架构概览"></a>1. 架构概览</h2><ul>
+<li>OS: Rocky Linux 9</li>
+<li>Web Server: Nginx</li>
+<li>Database: PostgreSQL</li>
+<li>Zabbix Component: Server, Frontend, Agent 2</li>
+</ul>
+<h2 id="2-安装-Zabbix-仓库"><a href="#2-安装-Zabbix-仓库" class="headerlink" title="2. 安装 Zabbix 仓库"></a>2. 安装 Zabbix 仓库</h2><h3 id="2-1-安装-Zabbix-7-0-仓库"><a href="#2-1-安装-Zabbix-7-0-仓库" class="headerlink" title="2.1. 安装 Zabbix 7.0 仓库"></a>2.1. 安装 Zabbix 7.0 仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -Uvh https://repo.zabbix.com/zabbix/7.0/rhel/9/x86_64/zabbix-release-7.0-5.el9.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-清理并重建缓存"><a href="#2-2-清理并重建缓存" class="headerlink" title="2.2. 清理并重建缓存"></a>2.2. 清理并重建缓存</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf clean all</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-安装-PostgreSQL"><a href="#3-安装-PostgreSQL" class="headerlink" title="3. 安装 PostgreSQL"></a>3. 安装 PostgreSQL</h2><h3 id="3-1-安装-PostgreSQL-Server"><a href="#3-1-安装-PostgreSQL-Server" class="headerlink" title="3.1. 安装 PostgreSQL Server"></a>3.1. 安装 PostgreSQL Server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dnf module install postgresql:16 -y </span><br><span class="line">dnf install postgresql-server postgresql-contrib -y</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-初始化并启动数据库"><a href="#3-2-初始化并启动数据库" class="headerlink" title="3.2. 初始化并启动数据库"></a>3.2. 初始化并启动数据库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 初始化数据库</span></span><br><span class="line">postgresql-setup --initdb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动并设置开机自启</span></span><br><span class="line">systemctl <span class="built_in">enable</span> --now postgresql</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-创建-Zabbix-用户和数据库"><a href="#3-3-创建-Zabbix-用户和数据库" class="headerlink" title="3.3. 创建 Zabbix 用户和数据库"></a>3.3. 创建 Zabbix 用户和数据库</h3><p>我们需要切换到 postgres 系统用户来操作数据库。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换到 postgres 用户并进入数据库命令行</span></span><br><span class="line"><span class="built_in">sudo</span> -u postgres psql</span><br></pre></td></tr></table></figure>
+<p>在 postgres&#x3D;# 提示符下执行以下 SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建用户 (请将 your_password 替换为强密码)</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> zabbix <span class="keyword">WITH</span> PASSWORD <span class="string">&#x27;your_password&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建数据库</span></span><br><span class="line"><span class="keyword">CREATE</span> DATABASE zabbix OWNER zabbix;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 退出</span></span><br><span class="line">\q</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-配置PostgreSQL-认证方式"><a href="#3-4-配置PostgreSQL-认证方式" class="headerlink" title="3.4. 配置PostgreSQL 认证方式"></a>3.4. 配置PostgreSQL 认证方式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /var/lib/pgsql/data/pg_hba.conf</span><br></pre></td></tr></table></figure>
+<p>修改 IPv4 和 IPv6 连接方式 找到类似下面的行，将 ident (或 peer) 改为 scram-sha-256 (如果你安装的是较旧版本则用 md5)。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">修改前：</span><br><span class="line"><span class="comment"># IPv4 local connections:</span></span><br><span class="line">host    all             all             127.0.0.1/32            ident</span><br><span class="line"><span class="comment"># IPv6 local connections:</span></span><br><span class="line">host    all             all             ::1/128                 ident</span><br><span class="line"></span><br><span class="line">修改后：</span><br><span class="line"><span class="comment"># IPv4 local connections:</span></span><br><span class="line">host    all             all             127.0.0.1/32            scram-sha-256</span><br><span class="line"><span class="comment"># IPv6 local connections:</span></span><br><span class="line">host    all             all             ::1/128                 scram-sha-256</span><br><span class="line">-------------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<p>重启 PostgreSQL 使配置生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart postgresql</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="4-安装-Zabbix-组件"><a href="#4-安装-Zabbix-组件" class="headerlink" title="4. 安装 Zabbix 组件"></a>4. 安装 Zabbix 组件</h2><p>这里我们安装 PostgreSQL 版本的 Server 和 Web 前端，以及 Nginx 配置和 Agent 2。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf install zabbix-server-pgsql zabbix-web-pgsql zabbix-nginx-conf zabbix-sql-scripts zabbix-selinux-policy zabbix-agent2 -y</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-导入初始数据"><a href="#5-导入初始数据" class="headerlink" title="5. 导入初始数据"></a>5. 导入初始数据</h2><p>将 Zabbix 的基础架构导入到 PostgreSQL 中。系统会提示你输入刚才创建的 zabbix 数据库用户的密码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | <span class="built_in">sudo</span> -u zabbix psql zabbix</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-配置-Zabbix-Server"><a href="#6-配置-Zabbix-Server" class="headerlink" title="6. 配置 Zabbix Server"></a>6. 配置 Zabbix Server</h2><p>编辑 Server 配置文件，配置数据库密码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/zabbix/zabbix_server.conf</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line">DBName=zabbix</span><br><span class="line">DBUser=zabbix</span><br><span class="line">DBPassword=your_password &lt;-- 这里填你在第二步设置的密码</span><br></pre></td></tr></table></figure>
+<p>(保存并退出: :wq)</p>
+<h2 id="7-配置-Nginx"><a href="#7-配置-Nginx" class="headerlink" title="7. 配置 Nginx"></a>7. 配置 Nginx</h2><p>取消注释并修改端口 去掉 listen 和 server_name 前面的 #。你可以直接使用 80 端口，或者设置为域名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/nginx/conf.d/zabbix.conf</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">        listen          80;</span><br><span class="line">        server_name     example.com; <span class="comment"># 如果没有域名，可以填 IP 或保持默认</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># ... 其他配置保持不变 ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>(保存并退出: :wq)</p>
+<p>注意： 确保 &#x2F;etc&#x2F;nginx&#x2F;nginx.conf 中没有其他的 server 块占用了 80 端口（Rocky Linux 默认的 nginx.conf 有时会包含一个 default server，如果冲突可能需要注释掉 &#x2F;etc&#x2F;nginx&#x2F;nginx.conf 里的 server 块）。</p>
+<h2 id="8-配置防火墙"><a href="#8-配置防火墙" class="headerlink" title="8. 配置防火墙"></a>8. 配置防火墙</h2><p>开放 Web 端口 (80&#x2F;443) 和 Zabbix Server&#x2F;Agent 通信端口 (10050&#x2F;10051)。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --add-service=http</span><br><span class="line">firewall-cmd --permanent --add-service=https</span><br><span class="line">firewall-cmd --permanent --add-port=10050/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=10051/tcp</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-启动所有服务"><a href="#9-启动所有服务" class="headerlink" title="9. 启动所有服务"></a>9. 启动所有服务</h2><p>启动 Zabbix Server, Agent 2, Nginx 和 PHP-FPM，并设置开机自启。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart zabbix-server zabbix-agent2 nginx php-fpm</span><br><span class="line">systemctl <span class="built_in">enable</span> zabbix-server zabbix-agent2 nginx php-fpm</span><br></pre></td></tr></table></figure>
+<p>检查 Agent 2 状态确保它正常运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status zabbix-agent2</span><br></pre></td></tr></table></figure>
+<h2 id="10-安装中文语言包"><a href="#10-安装中文语言包" class="headerlink" title="10. 安装中文语言包"></a>10. 安装中文语言包</h2><h3 id="10-1-安装系统语言包"><a href="#10-1-安装系统语言包" class="headerlink" title="10.1. 安装系统语言包"></a>10.1. 安装系统语言包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf install glibc-langpack-zh -y</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-2-重启-PHP-FPM-服务"><a href="#10-2-重启-PHP-FPM-服务" class="headerlink" title="10.2. 重启 PHP-FPM 服务"></a>10.2. 重启 PHP-FPM 服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart php-fpm</span><br></pre></td></tr></table></figure>
+
+<h2 id="11-Web-前端初始化"><a href="#11-Web-前端初始化" class="headerlink" title="11. Web 前端初始化"></a>11. Web 前端初始化</h2><hr>
+<ul>
+<li>打开浏览器访问：http:&#x2F;&#x2F;&lt;服务器IP&gt;</li>
+<li>Check of pre-requisites: 确保所有项为 OK。</li>
+<li>Configure DB connection:</li>
+<li>Database type: PostgreSQL</li>
+<li>Password: 输入 your_password</li>
+<li>设置服务器名称 (如 “Zabbix PG Server”)，时区选 Asia&#x2F;Shanghai。</li>
+<li>完成安装。</li>
+</ul>
+<hr>
+<p>默认登录信息：</p>
+<ul>
+<li>用户：Admin</li>
+<li>密码：zabbix</li>
+</ul>
+<hr>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/09/01/CentOS7%E7%A6%BB%E7%BA%BF%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2025-12-25 01:38:17
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Zabbix/" title="Zabbix">
+                        #Zabbix
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Zabbix%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE"><span class="toc-text">Zabbix安装配置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%9E%B6%E6%9E%84%E6%A6%82%E8%A7%88"><span class="toc-text">1. 架构概览</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85-Zabbix-%E4%BB%93%E5%BA%93"><span class="toc-text">2. 安装 Zabbix 仓库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%AE%89%E8%A3%85-Zabbix-7-0-%E4%BB%93%E5%BA%93"><span class="toc-text">2.1. 安装 Zabbix 7.0 仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E6%B8%85%E7%90%86%E5%B9%B6%E9%87%8D%E5%BB%BA%E7%BC%93%E5%AD%98"><span class="toc-text">2.2. 清理并重建缓存</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AE%89%E8%A3%85-PostgreSQL"><span class="toc-text">3. 安装 PostgreSQL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%AE%89%E8%A3%85-PostgreSQL-Server"><span class="toc-text">3.1. 安装 PostgreSQL Server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E5%88%9D%E5%A7%8B%E5%8C%96%E5%B9%B6%E5%90%AF%E5%8A%A8%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">3.2. 初始化并启动数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E5%88%9B%E5%BB%BA-Zabbix-%E7%94%A8%E6%88%B7%E5%92%8C%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">3.3. 创建 Zabbix 用户和数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E9%85%8D%E7%BD%AEPostgreSQL-%E8%AE%A4%E8%AF%81%E6%96%B9%E5%BC%8F"><span class="toc-text">3.4. 配置PostgreSQL 认证方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%AE%89%E8%A3%85-Zabbix-%E7%BB%84%E4%BB%B6"><span class="toc-text">4. 安装 Zabbix 组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%AF%BC%E5%85%A5%E5%88%9D%E5%A7%8B%E6%95%B0%E6%8D%AE"><span class="toc-text">5. 导入初始数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E9%85%8D%E7%BD%AE-Zabbix-Server"><span class="toc-text">6. 配置 Zabbix Server</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E9%85%8D%E7%BD%AE-Nginx"><span class="toc-text">7. 配置 Nginx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-text">8. 配置防火墙</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E5%90%AF%E5%8A%A8%E6%89%80%E6%9C%89%E6%9C%8D%E5%8A%A1"><span class="toc-text">9. 启动所有服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E5%AE%89%E8%A3%85%E4%B8%AD%E6%96%87%E8%AF%AD%E8%A8%80%E5%8C%85"><span class="toc-text">10. 安装中文语言包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#10-1-%E5%AE%89%E8%A3%85%E7%B3%BB%E7%BB%9F%E8%AF%AD%E8%A8%80%E5%8C%85"><span class="toc-text">10.1. 安装系统语言包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-2-%E9%87%8D%E5%90%AF-PHP-FPM-%E6%9C%8D%E5%8A%A1"><span class="toc-text">10.2. 重启 PHP-FPM 服务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-Web-%E5%89%8D%E7%AB%AF%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">11. Web 前端初始化</span></a></li></ol></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2026 Oranges</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+    <div class="footer-views">
+      
+          本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+      
+          本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        
+      
+          本站访客数<span id="busuanzi_value_site_uv"></span>人
+        
+      
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Zabbix + '&url=' + https%3A%2F%2Fzcxx0322.github.io%2F2025%2F11%2F08%2FZabbix%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://zcxx0322.github.io/2025/11/08/Zabbix/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
