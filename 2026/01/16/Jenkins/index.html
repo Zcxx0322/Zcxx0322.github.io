@@ -13,7 +13,7 @@
   
   <title>
     
-      archive_a: 2025/11 
+      Jenkins 
       
       
       |
@@ -110,145 +110,153 @@
 
 
       <div class="flex-container">
-        <!-- 归档页，展示本站所有文章，按照年份降序归类，url形式：https://yoursite/archives/ -->
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
 
-<!-- last: 按年份把文章分组，当前遍历到的年份 -->
-<!-- now: 当前遍历到的文章的发布年份 -->
 
-<div class="container archives">
-  <div class="post-list">
-    
-        <!-- 后续文章的发布年份呈现 -->
-        <div class="content-title">
-          <h2>
-            <span>2026</span>
-          </h2>
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">Jenkins</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2026-01-16 17:37:53
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Jenkins/" title="Jenkins">
+                    #Jenkins
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <h1 id="1-环境准备与安装"><a href="#1-环境准备与安装" class="headerlink" title="1. 环境准备与安装"></a>1. 环境准备与安装</h1><p>更新系统并安装必要工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dnf update -y</span><br><span class="line"><span class="built_in">sudo</span> dnf install wget vim fontconfig -y</span><br></pre></td></tr></table></figure>
+<p>(注：Jenkins 的 Web 界面依赖 fontconfig 字体库，否则可能报错)</p>
+<h1 id="2-安装Java环境-必须"><a href="#2-安装Java环境-必须" class="headerlink" title="2. 安装Java环境 (必须)"></a>2. 安装Java环境 (必须)</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> dnf install java-17-openjdk -y</span><br></pre></td></tr></table></figure>
+<p>验证安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br><span class="line"><span class="comment"># 输出应包含 openjdk version &quot;17.x.x&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="3-添加-Jenkins-源并安装"><a href="#3-添加-Jenkins-源并安装" class="headerlink" title="3. 添加 Jenkins 源并安装"></a>3. 添加 Jenkins 源并安装</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载仓库文件</span></span><br><span class="line"><span class="built_in">sudo</span> wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入 GPG 密钥</span></span><br><span class="line"><span class="built_in">sudo</span> rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 Jenkins</span></span><br><span class="line"><span class="built_in">sudo</span> dnf install jenkins -y</span><br></pre></td></tr></table></figure>
+
+<h1 id="4-启动服务并配置防火墙"><a href="#4-启动服务并配置防火墙" class="headerlink" title="4. 启动服务并配置防火墙"></a>4. 启动服务并配置防火墙</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重新加载配置</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置开机自启并立即启动</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> --now jenkins</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查状态</span></span><br><span class="line">systemctl status jenkins</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --permanent --add-port=8080/tcp</span><br><span class="line"><span class="built_in">sudo</span> firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+<h1 id="5-获取初始密码"><a href="#5-获取初始密码" class="headerlink" title="5. 获取初始密码"></a>5. 获取初始密码</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">cat</span> /var/lib/jenkins/secrets/initialAdminPassword</span><br></pre></td></tr></table></figure>
+
+
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2025/11/08/Zabbix/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2026-01-16 17:37:53
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Jenkins/" title="Jenkins">
+                        #Jenkins
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
         </div>
       
-      <div class="post-item" title="Jenkins">
-        <div class="time-m-d">01-16</div>
-        <div class="title">
-          <a href="/2026/01/16/Jenkins/">
-            <span>Jenkins</span>
-          </a>
-        </div>
-      </div>
+    </div>
     
-        <!-- 后续文章的发布年份呈现 -->
-        <div class="content-title">
-          <h2>
-            <span>2025</span>
-          </h2>
-        </div>
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
       
-      <div class="post-item" title="Zabbix">
-        <div class="time-m-d">11-08</div>
-        <div class="title">
-          <a href="/2025/11/08/Zabbix/">
-            <span>Zabbix</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="CentOS7离线升级内核">
-        <div class="time-m-d">09-01</div>
-        <div class="title">
-          <a href="/2025/09/01/CentOS7%E7%A6%BB%E7%BA%BF%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8/">
-            <span>CentOS7离线升级内核</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Nginx">
-        <div class="time-m-d">09-01</div>
-        <div class="title">
-          <a href="/2025/09/01/Nginx/">
-            <span>Nginx</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Uptime-Kuma">
-        <div class="time-m-d">08-19</div>
-        <div class="title">
-          <a href="/2025/08/19/Uptime-Kuma/">
-            <span>Uptime-Kuma</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Phpipam">
-        <div class="time-m-d">07-23</div>
-        <div class="title">
-          <a href="/2025/07/23/Phpipam/">
-            <span>Phpipam</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Mysql">
-        <div class="time-m-d">03-14</div>
-        <div class="title">
-          <a href="/2025/03/14/Mysql/">
-            <span>Mysql</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="KVM">
-        <div class="time-m-d">03-12</div>
-        <div class="title">
-          <a href="/2025/03/12/KVM/">
-            <span>KVM</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="Prometheus">
-        <div class="time-m-d">03-08</div>
-        <div class="title">
-          <a href="/2025/03/08/Prometheus/">
-            <span>Prometheus</span>
-          </a>
-        </div>
-      </div>
-    
-        <!-- 后续文章的发布年份呈现 -->
-        <div class="content-title">
-          <h2>
-            <span>2024</span>
-          </h2>
-        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="toc-text">1. 环境准备与安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85Java%E7%8E%AF%E5%A2%83-%E5%BF%85%E9%A1%BB"><span class="toc-text">2. 安装Java环境 (必须)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E6%B7%BB%E5%8A%A0-Jenkins-%E6%BA%90%E5%B9%B6%E5%AE%89%E8%A3%85"><span class="toc-text">3. 添加 Jenkins 源并安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E5%B9%B6%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-text">4. 启动服务并配置防火墙</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E8%8E%B7%E5%8F%96%E5%88%9D%E5%A7%8B%E5%AF%86%E7%A0%81"><span class="toc-text">5. 获取初始密码</span></a></li></ol>
       
-      <div class="post-item" title="CentOS7配置静态IP">
-        <div class="time-m-d">12-02</div>
-        <div class="title">
-          <a href="/2024/12/02/CentOS7%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/">
-            <span>CentOS7配置静态IP</span>
-          </a>
-        </div>
-      </div>
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
     
-      <div class="post-item" title="ArchLinux安装配置">
-        <div class="time-m-d">11-26</div>
-        <div class="title">
-          <a href="/2024/11/26/ArchLinux%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">
-            <span>ArchLinux安装配置</span>
-          </a>
-        </div>
-      </div>
-    
-      <div class="post-item" title="CentOS7初始化与优化配置">
-        <div class="time-m-d">11-21</div>
-        <div class="title">
-          <a href="/2024/11/21/CentOS7%E5%88%9D%E5%A7%8B%E5%8C%96%E4%B8%8E%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE/">
-            <span>CentOS7初始化与优化配置</span>
-          </a>
-        </div>
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
       </div>
     
   </div>
-</div>
+
 
         
 <div class="footer">
@@ -518,6 +526,24 @@
 
 
         
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + Jenkins + '&url=' + https%3A%2F%2Fzcxx0322.github.io%2F2026%2F01%2F16%2FJenkins%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://zcxx0322.github.io/2026/01/16/Jenkins/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
   
   
 <script src="/js/shares.js"></script>
