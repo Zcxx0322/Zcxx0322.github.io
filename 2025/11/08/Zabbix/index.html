@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+
+
+<title>Zabbix | Zcxx0322运维杂记</title>
+<meta name="description" content="">
+<meta name="author" content="Zcxx0322">
+
+  <meta name="keywords" content="Zabbix">
+
+<link rel="canonical" href="https://zcxx0322.github.io/2025/11/08/Zabbix/">
+
+<!-- Open Graph -->
+<meta property="og:type"        content="article">
+<meta property="og:title"       content="Zabbix">
+<meta property="og:description" content="">
+<meta property="og:url"         content="https://zcxx0322.github.io/2025/11/08/Zabbix/">
+<meta property="og:site_name"   content="Zcxx0322运维杂记">
+
+
+  <meta property="article:published_time" content="2025-11-08T08:46:40.000Z">
+  <meta property="article:author"         content="Zcxx0322">
+  
+    <meta property="article:tag" content="Zabbix">
+  
+
+
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="Zabbix">
+<meta name="twitter:description" content="">
+
+
+<!-- JSON-LD -->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Zabbix",
+  "datePublished": "2025-11-08T08:46:40.000Z",
+  "dateModified": "2026-06-05T01:57:36.335Z",
+  "author": {"@type":"Person","name":"Zcxx0322"},
+  "publisher": {"@type":"Organization","name":"Zcxx0322运维杂记"},
+  "description": ""
+}
+</script>
+
+
+<!-- Favicon -->
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.ico">
+<link rel="alternate" type="application/rss+xml" title="Zcxx0322运维杂记" href="/atom.xml">
+
+<!-- Main stylesheet -->
+<link rel="stylesheet" href="/css/main.css">
+
+<!-- Code highlight styles are bundled in main.css (Hexo native highlight.js output) -->
+
+<!-- KaTeX -->
+
+
+<!-- MathJax -->
+
+
+<!-- Dark-mode init (prevents flash) -->
+<script>
+(function(){
+  var s = localStorage.getItem('pure-theme');
+  var d = 'auto';
+  var dark = s === 'dark' || (!s && d === 'dark') ||
+             (!s && d === 'auto' && window.matchMedia('(prefers-color-scheme:dark)').matches);
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+})();
+</script>
+
+<meta name="generator" content="Hexo 8.1.1"></head>
+<body>
+  <header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+
+    <a href="/" class="brand-link">
+      
+        <img src="/img/zcxx0322.png" alt="Zcxx0322运维杂记" class="brand-logo">
+      
+    </a>
+
+    <nav class="site-nav" id="siteNav" aria-label="主导航">
+      <ul class="nav-list">
+        
+          
+          <li class="nav-item">
+            <a href="/" class="nav-link">
+              首页
+            </a>
+          </li>
+        
+          
+          <li class="nav-item">
+            <a href="/archives" class="nav-link">
+              归档
+            </a>
+          </li>
+        
+          
+          <li class="nav-item">
+            <a href="/tags" class="nav-link">
+              标签
+            </a>
+          </li>
+        
+          
+          <li class="nav-item">
+            <a href="/categories" class="nav-link">
+              分类
+            </a>
+          </li>
+        
+          
+          <li class="nav-item">
+            <a href="/about" class="nav-link">
+              关于
+            </a>
+          </li>
+        
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      
+        <button class="icon-btn" id="searchBtn" aria-label="搜索" title="搜索">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+      
+
+      
+        <button class="icon-btn theme-toggle" id="themeToggle" aria-label="切换主题" title="切换主题">
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      
+
+      <button class="icon-btn hamburger" id="menuToggle" aria-label="菜单" aria-expanded="false" aria-controls="siteNav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+
+  <main class="main-content">
+    <div class="container">
+      <div class="post-layout">
+  
+    
+<div class="toc-wrap" id="tocWrap">
+  <div class="toc-header">
+    <span>目录</span>
+    <button class="toc-toggle" id="tocToggle" aria-label="折叠目录">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  </div>
+  <nav class="toc-nav" id="tocNav" aria-label="文章目录">
+    <!-- Populated by main.js -->
+  </nav>
+</div>
+
+
+  
+
+  <article class="post-article" itemscope itemtype="https://schema.org/BlogPosting">
+    <header class="post-header">
+      <h1 class="post-title" itemprop="headline">Zabbix</h1>
+      <div class="post-meta">
+        <time datetime="2025-11-08T08:46:40.000Z" itemprop="datePublished">
+          2025-11-08
+        </time>
+        
+          <span class="meta-sep">·</span>
+          <span>更新于 2026-06-05</span>
+        
+        
+          <span class="meta-sep">·</span>
+          
+            <a href="/categories/Zabbix/" class="meta-category">Zabbix</a>
+          
+        
+        
+      </div>
+      
+    </header>
+
+    
+
+
+
+    <div class="post-content" itemprop="articleBody">
+      <h1 id="Zabbix安装配置"><a href="#Zabbix安装配置" class="headerlink" title="Zabbix安装配置"></a>Zabbix安装配置</h1><h2 id="1-架构概览"><a href="#1-架构概览" class="headerlink" title="1. 架构概览"></a>1. 架构概览</h2><ul>
+<li>OS: Rocky Linux 9</li>
+<li>Web Server: Nginx</li>
+<li>Database: PostgreSQL</li>
+<li>Zabbix Component: Server, Frontend, Agent 2</li>
+</ul>
+<h2 id="2-安装-Zabbix-仓库"><a href="#2-安装-Zabbix-仓库" class="headerlink" title="2. 安装 Zabbix 仓库"></a>2. 安装 Zabbix 仓库</h2><h3 id="2-1-安装-Zabbix-7-0-仓库"><a href="#2-1-安装-Zabbix-7-0-仓库" class="headerlink" title="2.1. 安装 Zabbix 7.0 仓库"></a>2.1. 安装 Zabbix 7.0 仓库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -Uvh https://repo.zabbix.com/zabbix/7.0/rhel/9/x86_64/zabbix-release-7.0-5.el9.noarch.rpm</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-清理并重建缓存"><a href="#2-2-清理并重建缓存" class="headerlink" title="2.2. 清理并重建缓存"></a>2.2. 清理并重建缓存</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf clean all</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-安装-PostgreSQL"><a href="#3-安装-PostgreSQL" class="headerlink" title="3. 安装 PostgreSQL"></a>3. 安装 PostgreSQL</h2><h3 id="3-1-安装-PostgreSQL-Server"><a href="#3-1-安装-PostgreSQL-Server" class="headerlink" title="3.1. 安装 PostgreSQL Server"></a>3.1. 安装 PostgreSQL Server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dnf module install postgresql:16 -y</span><br><span class="line">dnf install postgresql-server postgresql-contrib -y</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-初始化并启动数据库"><a href="#3-2-初始化并启动数据库" class="headerlink" title="3.2. 初始化并启动数据库"></a>3.2. 初始化并启动数据库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 初始化数据库</span></span><br><span class="line">postgresql-setup --initdb</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动并设置开机自启</span></span><br><span class="line">systemctl <span class="built_in">enable</span> --now postgresql</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-创建-Zabbix-用户和数据库"><a href="#3-3-创建-Zabbix-用户和数据库" class="headerlink" title="3.3. 创建 Zabbix 用户和数据库"></a>3.3. 创建 Zabbix 用户和数据库</h3><p>我们需要切换到 postgres 系统用户来操作数据库。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 切换到 postgres 用户并进入数据库命令行</span></span><br><span class="line"><span class="built_in">sudo</span> -u postgres psql</span><br></pre></td></tr></table></figure>
+
+<p>在 postgres&#x3D;# 提示符下执行以下 SQL：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建用户 (请将 your_password 替换为强密码)</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> zabbix <span class="keyword">WITH</span> PASSWORD <span class="string">&#x27;your_password&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建数据库</span></span><br><span class="line"><span class="keyword">CREATE</span> DATABASE zabbix OWNER zabbix;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 退出</span></span><br><span class="line">\q</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4-配置PostgreSQL-认证方式"><a href="#3-4-配置PostgreSQL-认证方式" class="headerlink" title="3.4. 配置PostgreSQL 认证方式"></a>3.4. 配置PostgreSQL 认证方式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /var/lib/pgsql/data/pg_hba.conf</span><br></pre></td></tr></table></figure>
+
+<p>修改 IPv4 和 IPv6 连接方式 找到类似下面的行，将 ident (或 peer) 改为 scram-sha-256 (如果你安装的是较旧版本则用 md5)。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">-------------------------------------------------------------------------------</span><br><span class="line">修改前：</span><br><span class="line"><span class="comment"># IPv4 local connections:</span></span><br><span class="line">host    all             all             127.0.0.1/32            ident</span><br><span class="line"><span class="comment"># IPv6 local connections:</span></span><br><span class="line">host    all             all             ::1/128                 ident</span><br><span class="line"></span><br><span class="line">修改后：</span><br><span class="line"><span class="comment"># IPv4 local connections:</span></span><br><span class="line">host    all             all             127.0.0.1/32            scram-sha-256</span><br><span class="line"><span class="comment"># IPv6 local connections:</span></span><br><span class="line">host    all             all             ::1/128                 scram-sha-256</span><br><span class="line">-------------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+
+<p>重启 PostgreSQL 使配置生效</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart postgresql</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-安装-Zabbix-组件"><a href="#4-安装-Zabbix-组件" class="headerlink" title="4. 安装 Zabbix 组件"></a>4. 安装 Zabbix 组件</h2><p>这里我们安装 PostgreSQL 版本的 Server 和 Web 前端，以及 Nginx 配置和 Agent 2。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf install zabbix-server-pgsql zabbix-web-pgsql zabbix-nginx-conf zabbix-sql-scripts zabbix-selinux-policy zabbix-agent2 -y</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-导入初始数据"><a href="#5-导入初始数据" class="headerlink" title="5. 导入初始数据"></a>5. 导入初始数据</h2><p>将 Zabbix 的基础架构导入到 PostgreSQL 中。系统会提示你输入刚才创建的 zabbix 数据库用户的密码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">zcat /usr/share/zabbix-sql-scripts/postgresql/server.sql.gz | <span class="built_in">sudo</span> -u zabbix psql zabbix</span><br></pre></td></tr></table></figure>
+
+<h2 id="6-配置-Zabbix-Server"><a href="#6-配置-Zabbix-Server" class="headerlink" title="6. 配置 Zabbix Server"></a>6. 配置 Zabbix Server</h2><p>编辑 Server 配置文件，配置数据库密码。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/zabbix/zabbix_server.conf</span><br><span class="line"></span><br><span class="line">......</span><br><span class="line">DBName=zabbix</span><br><span class="line">DBUser=zabbix</span><br><span class="line">DBPassword=your_password &lt;-- 这里填你在第二步设置的密码</span><br></pre></td></tr></table></figure>
+
+<p>(保存并退出: :wq)</p>
+<h2 id="7-配置-Nginx"><a href="#7-配置-Nginx" class="headerlink" title="7. 配置 Nginx"></a>7. 配置 Nginx</h2><p>取消注释并修改端口 去掉 listen 和 server_name 前面的 #。你可以直接使用 80 端口，或者设置为域名。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/nginx/conf.d/zabbix.conf</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">        listen          80;</span><br><span class="line">        server_name     example.com; <span class="comment"># 如果没有域名，可以填 IP 或保持默认</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># ... 其他配置保持不变 ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>(保存并退出: :wq)</p>
+<p>注意： 确保 &#x2F;etc&#x2F;nginx&#x2F;nginx.conf 中没有其他的 server 块占用了 80 端口（Rocky Linux 默认的 nginx.conf 有时会包含一个 default server，如果冲突可能需要注释掉 &#x2F;etc&#x2F;nginx&#x2F;nginx.conf 里的 server 块）。</p>
+<h2 id="8-配置防火墙"><a href="#8-配置防火墙" class="headerlink" title="8. 配置防火墙"></a>8. 配置防火墙</h2><p>开放 Web 端口 (80&#x2F;443) 和 Zabbix Server&#x2F;Agent 通信端口 (10050&#x2F;10051)。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --permanent --add-service=http</span><br><span class="line">firewall-cmd --permanent --add-service=https</span><br><span class="line">firewall-cmd --permanent --add-port=10050/tcp</span><br><span class="line">firewall-cmd --permanent --add-port=10051/tcp</span><br><span class="line">firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<h2 id="9-启动所有服务"><a href="#9-启动所有服务" class="headerlink" title="9. 启动所有服务"></a>9. 启动所有服务</h2><p>启动 Zabbix Server, Agent 2, Nginx 和 PHP-FPM，并设置开机自启。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart zabbix-server zabbix-agent2 nginx php-fpm</span><br><span class="line">systemctl <span class="built_in">enable</span> zabbix-server zabbix-agent2 nginx php-fpm</span><br></pre></td></tr></table></figure>
+
+<p>检查 Agent 2 状态确保它正常运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status zabbix-agent2</span><br></pre></td></tr></table></figure>
+
+<h2 id="10-安装中文语言包"><a href="#10-安装中文语言包" class="headerlink" title="10. 安装中文语言包"></a>10. 安装中文语言包</h2><h3 id="10-1-安装系统语言包"><a href="#10-1-安装系统语言包" class="headerlink" title="10.1. 安装系统语言包"></a>10.1. 安装系统语言包</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dnf install glibc-langpack-zh -y</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-2-重启-PHP-FPM-服务"><a href="#10-2-重启-PHP-FPM-服务" class="headerlink" title="10.2. 重启 PHP-FPM 服务"></a>10.2. 重启 PHP-FPM 服务</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart php-fpm</span><br></pre></td></tr></table></figure>
+
+<h2 id="11-Web-前端初始化"><a href="#11-Web-前端初始化" class="headerlink" title="11. Web 前端初始化"></a>11. Web 前端初始化</h2><hr>
+<ul>
+<li>打开浏览器访问：http:&#x2F;&#x2F;&lt;服务器IP&gt;</li>
+<li>Check of pre-requisites: 确保所有项为 OK。</li>
+<li>Configure DB connection:</li>
+<li>Database type: PostgreSQL</li>
+<li>Password: 输入 your_password</li>
+<li>设置服务器名称 (如 “Zabbix PG Server”)，时区选 Asia&#x2F;Shanghai。</li>
+<li>完成安装。</li>
+</ul>
+<hr>
+<p>默认登录信息：</p>
+<ul>
+<li>用户：Admin</li>
+<li>密码：zabbix</li>
+</ul>
+<hr>
+
+    </div>
+
+    
+
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Zabbix/" class="tag">#Zabbix</a>
+          
+        </div>
+      
+
+      <div class="share-section">
+  <span class="share-label">分享：</span>
+  <div class="share-buttons">
+    <button class="share-btn" id="copyLinkBtn" title="复制链接" aria-label="复制链接">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+      </svg>
+      <span class="share-btn-text">复制链接</span>
+    </button>
+
+    <a class="share-btn"
+       href="https://twitter.com/intent/tweet?text=Zabbix&url=https%3A%2F%2Fzcxx0322.github.io%2F2025%2F11%2F08%2FZabbix%2F"
+       target="_blank" rel="noopener" title="分享到 Twitter" aria-label="分享到 Twitter">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+      Twitter
+    </a>
+
+    <a class="share-btn"
+       href="https://service.weibo.com/share/share.php?title=Zabbix&url=https%3A%2F%2Fzcxx0322.github.io%2F2025%2F11%2F08%2FZabbix%2F"
+       target="_blank" rel="noopener" title="分享到微博" aria-label="分享到微博">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.739 5.443zm5.609-12.353c-.469-.135-.791-.229-.546-.822.533-1.333.588-2.484.01-3.311-.988-1.411-3.693-1.337-6.797.031 0 0-.973.424-.723-.346.476-1.545.404-2.836-.339-3.584-1.698-1.706-6.219.063-10.094 3.958C-1.1 7.229-2 10.189-2 12.768c0 5.082 6.514 8.17 12.89 8.17 8.354 0 13.91-4.853 13.91-8.703 0-2.328-1.967-3.655-3.093-4.265zm1.307-3.01c-.469-.135-.791-.229-.546-.822.533-1.333.588-2.484.01-3.311-.988-1.411-3.693-1.337-6.797.031 0 0-.973.424-.723-.346.476-1.545.404-2.836-.339-3.584"/>
+      </svg>
+      微博
+    </a>
+  </div>
+</div>
+
+<script>
+document.getElementById('copyLinkBtn').addEventListener('click', function() {
+  navigator.clipboard.writeText(window.location.href).then(function() {
+    var btn = document.querySelector('#copyLinkBtn .share-btn-text');
+    btn.textContent = '已复制！';
+    setTimeout(function() { btn.textContent = '复制链接'; }, 2000);
+  });
+});
+</script>
+
+
+      
+        <div class="post-copyright">
+          <p><strong>本文标题：</strong>Zabbix</p>
+          <p><strong>本文链接：</strong><a href="https://zcxx0322.github.io/2025/11/08/Zabbix/">https://zcxx0322.github.io/2025/11/08/Zabbix/</a></p>
+          <p><strong>版权声明：</strong>转载请注明出处。</p>
+        </div>
+      
+    </footer>
+
+    <!-- Prev / Next navigation -->
+    <nav class="post-nav">
+      
+        <a href="/2026/01/16/Jenkins/" class="post-nav-item post-nav-prev">
+          <span class="post-nav-label">← 上一篇</span>
+          <span class="post-nav-title">Jenkins</span>
+        </a>
+      
+      
+        <a href="/2025/09/01/CentOS7%E7%A6%BB%E7%BA%BF%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8/" class="post-nav-item post-nav-next">
+          <span class="post-nav-label">下一篇 →</span>
+          <span class="post-nav-title">CentOS7离线升级内核</span>
+        </a>
+      
+    </nav>
+
+    
+<section class="comments-section" id="comments">
+  <h3 class="comments-title">评论</h3>
+
+  
+
+  <!-- Giscus -->
+  
+    
+    <script src="https://giscus.app/client.js"
+      data-repo="Zcxx0322/Zcxx0322.github.io"
+      data-repo-id="R_kgDOQev4PQ"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOQev4Pc4C97e7"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="bottom"
+      data-theme="preferred_color_scheme"
+      data-lang="zh-CN"
+      crossorigin="anonymous"
+      async>
+    </script>
+  
+
+  <!-- Waline -->
+  
+
+  <!-- Disqus -->
+  
+
+  <!-- Valine -->
+  
+
+</section>
+
+
+  </article>
+</div>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-links">
+      
+        
+          <a href="https://github.com/Zcxx0322" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+          </a>
+        
+        
+        
+        
+      
+    </div>
+
+    <div class="footer-info">
+      <span>&copy; 2024 – 2026 Zcxx0322</span>
+      <span class="footer-sep">·</span>
+      <span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/Zcxx0322/hexo-theme-pure" target="_blank" rel="noopener">Pure</a></span>
+      
+    </div>
+
+    
+  </div>
+</footer>
+
+
+  
+    <div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="搜索">
+  <div class="search-modal">
+    <div class="search-header">
+      <div class="search-input-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="search" id="searchInput" class="search-input" placeholder="搜索文章…" autocomplete="off" aria-label="搜索">
+      </div>
+      <button class="search-close" id="searchClose" aria-label="关闭搜索">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="search-results" id="searchResults" aria-live="polite">
+      <p class="search-hint">输入关键词开始搜索</p>
+    </div>
+  </div>
+</div>
+
+  
+
+  <button class="back-to-top" id="backToTop" aria-label="回到顶部" title="回到顶部">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+  </button>
+
+  <script src="/js/main.js"></script>
+  
+    <script src="/js/search.js"></script>
+  
+
+  
+  
+  
+  
+
+
+</body>
+</html>
