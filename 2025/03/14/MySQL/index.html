@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+<!-- Preconnect to CDN origins -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
 
 
 <title>Mysql | Zcxx0322运维杂记</title>
@@ -343,16 +347,6 @@
   </div>
 </div>
 
-<script>
-document.getElementById('copyLinkBtn').addEventListener('click', function() {
-  navigator.clipboard.writeText(window.location.href).then(function() {
-    var btn = document.querySelector('#copyLinkBtn .share-btn-text');
-    btn.textContent = '已复制！';
-    setTimeout(function() { btn.textContent = '复制链接'; }, 2000);
-  });
-});
-</script>
-
 
       
         <div class="post-copyright">
@@ -462,7 +456,7 @@ document.getElementById('copyLinkBtn').addEventListener('click', function() {
 
 
   
-    <div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="搜索">
+    <div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="搜索" data-search-path="search.xml">
   <div class="search-modal">
     <div class="search-header">
       <div class="search-input-wrap">
