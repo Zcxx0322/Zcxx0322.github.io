@@ -13,7 +13,7 @@
   
   <title>
     
-      CentOS7离线升级内核 
+      凌点(Leadien)操作文档 
       
       
       |
@@ -165,19 +165,31 @@
   <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
   <div class="container post-details" id="post-details">
     <div class="post-content">
-      <div class="post-title">CentOS7离线升级内核</div>
+      <div class="post-title">凌点(Leadien)操作文档</div>
       <div class="post-attach">
         <span class="post-pubtime">
           <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-          2026-06-05 09:57:36
+          2026-06-24 10:20:25
         </span>
         
               <span class="post-tags">
                 <i class="iconfont icon-tags mr-10" title="标签"></i>
                 
                 <span class="span--tag mr-8">
-                  <a href="/tags/CentOS7/" title="CentOS7">
-                    #CentOS7
+                  <a href="/tags/%E5%87%8C%E7%82%B9/" title="凌点">
+                    #凌点
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="服务器">
+                    #服务器
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" title="操作手册">
+                    #操作手册
                   </a>
                 </span>
                 
@@ -185,59 +197,37 @@
           
       </div>
       <div class="markdown-body">
-        <hr>
-<h1 id="CentOS7-离线升级内核"><a href="#CentOS7-离线升级内核" class="headerlink" title="CentOS7 离线升级内核"></a>CentOS7 离线升级内核</h1><ul>
-<li><strong>原内核版本</strong>：3.10.0-1160.el7.x86_64</li>
-<li><strong>升级后内核版本</strong>：5.4.261-1.el7.elrepo.x86_64</li>
-</ul>
-<hr>
-<h2 id="1-环境确认"><a href="#1-环境确认" class="headerlink" title="1. 环境确认"></a>1. 环境确认</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/centos-release</span><br><span class="line"><span class="built_in">uname</span> -r</span><br><span class="line"><span class="built_in">arch</span></span><br></pre></td></tr></table></figure>
+        <h1 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h1><h2 id="列出全部板卡列表"><a href="#列出全部板卡列表" class="headerlink" title="列出全部板卡列表"></a>列出全部板卡列表</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">marstool chaif</span><br></pre></td></tr></table></figure>
 
-<hr>
-<h2 id="2-准备-RPM-包"><a href="#2-准备-RPM-包" class="headerlink" title="2. 准备 RPM 包"></a>2. 准备 RPM 包</h2><p>在有网络的环境中，下载以下文件（来自 ELRepo archive 镜像），并传输到目标服务器，例如 <code>/root/</code> 目录：</p>
-<ul>
-<li>kernel-lt-5.4.261-1.el7.elrepo.x86_64.rpm</li>
-<li>kernel-lt-devel-5.4.261-1.el7.elrepo.x86_64.rpm</li>
-<li>kernel-lt-headers-5.4.261-1.el7.elrepo.x86_64.rpm</li>
-<li>kernel-lt-tools-5.4.261-1.el7.elrepo.x86_64.rpm</li>
-<li>kernel-lt-tools-libs-5.4.261-1.el7.elrepo.x86_64.rpm</li>
-</ul>
-<p>下载源：<br> <a target="_blank" rel="noopener" href="https://mirrors.coreix.net/elrepo-archive-archive/kernel/el7/x86_64/RPMS/">https://mirrors.coreix.net/elrepo-archive-archive/kernel/el7/x86_64/RPMS/</a></p>
-<hr>
-<h2 id="3-移除旧工具（避免冲突）"><a href="#3-移除旧工具（避免冲突）" class="headerlink" title="3. 移除旧工具（避免冲突）"></a>3. 移除旧工具（避免冲突）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum remove -y kernel-tools kernel-tools-libs</span><br></pre></td></tr></table></figure>
+<h2 id="列出指定刀片的板卡列表"><a href="#列出指定刀片的板卡列表" class="headerlink" title="列出指定刀片的板卡列表"></a>列出指定刀片的板卡列表</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># N代表刀片号</span></span><br><span class="line">marstool nodif N</span><br></pre></td></tr></table></figure>
 
-<hr>
-<h2 id="4-安装新内核及工具"><a href="#4-安装新内核及工具" class="headerlink" title="4. 安装新内核及工具"></a>4. 安装新内核及工具</h2><p>进入存放 rpm 包的目录（假设在 <code>/root/</code>）：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /root</span><br><span class="line"></span><br><span class="line">yum localinstall -y kernel-lt-5.4.261-1.el7.elrepo.x86_64.rpm \</span><br><span class="line">                    kernel-lt-devel-5.4.261-1.el7.elrepo.x86_64.rpm \</span><br><span class="line">                    kernel-lt-headers-5.4.261-1.el7.elrepo.x86_64.rpm \</span><br><span class="line">                    kernel-lt-tools-5.4.261-1.el7.elrepo.x86_64.rpm \</span><br><span class="line">                    kernel-lt-tools-libs-5.4.261-1.el7.elrepo.x86_64.rpm</span><br></pre></td></tr></table></figure>
+<h2 id="开启板卡ADB模式"><a href="#开启板卡ADB模式" class="headerlink" title="开启板卡ADB模式"></a>开启板卡ADB模式</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 代表N号刀片上的M号板卡</span></span><br><span class="line">marstool socusbin N M </span><br><span class="line"></span><br><span class="line"><span class="comment"># 确认开启ADB模式的板卡ID</span></span><br><span class="line">adb devices</span><br><span class="line"></span><br><span class="line">adb -s ID shell</span><br><span class="line"></span><br><span class="line"><span class="comment"># 若只有一张板卡开启ADB模式，则可不指定ID连接</span></span><br><span class="line">adb shell</span><br></pre></td></tr></table></figure>
 
-<hr>
-<h2 id="5-更新-GRUB-引导配置"><a href="#5-更新-GRUB-引导配置" class="headerlink" title="5. 更新 GRUB 引导配置"></a>5. 更新 GRUB 引导配置</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 生成 grub 配置文件</span></span><br><span class="line">grub2-mkconfig -o /boot/grub2/grub.cfg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看可用的内核启动项</span></span><br><span class="line">awk -F\&#x27; <span class="string">&#x27;$1==&quot;menuentry &quot; &#123;print $2&#125;&#x27;</span> /etc/grub2.cfg</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置默认启动项（一般新内核是第 0 项）</span></span><br><span class="line">grub2-set-default 0</span><br></pre></td></tr></table></figure>
+<h2 id="重启板卡"><a href="#重启板卡" class="headerlink" title="重启板卡"></a>重启板卡</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">marstool socpwr N M rst</span><br></pre></td></tr></table></figure>
 
-<hr>
-<h2 id="6-重启并验证"><a href="#6-重启并验证" class="headerlink" title="6. 重启并验证"></a>6. 重启并验证</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br><span class="line"></span><br><span class="line"><span class="built_in">uname</span> -r</span><br></pre></td></tr></table></figure>
+<h2 id="配置板卡IP"><a href="#配置板卡IP" class="headerlink" title="配置板卡IP"></a>配置板卡IP</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># IP是该板卡对应刀片的第一章板卡的IP，该命令会一次性顺序配置整个刀片所有的板卡IP</span></span><br><span class="line">marstool nodif N ip 192.168.1.100 mask 255.255.255.0 gw 192.168.0.1 dns 8.8.8.8</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置IP后需要重启板卡的网络模块，可以选择ADB连接后重启networking，也可以直接重启板卡</span></span><br><span class="line">marstool socpwr N M rst</span><br></pre></td></tr></table></figure>
 
-<p><strong>输出示例</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5.4.261-1.el7.elrepo.x86_64</span><br></pre></td></tr></table></figure>
+<h2 id="开启板卡刷机模式"><a href="#开启板卡刷机模式" class="headerlink" title="开启板卡刷机模式"></a>开启板卡刷机模式</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启了刷机模式的板卡会在IP后有一个*</span></span><br><span class="line">marstool socqfil N M on</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看开启了刷机模式的板卡locationid</span></span><br><span class="line">upgrade_tool ld</span><br></pre></td></tr></table></figure>
 
-<hr>
-<h2 id="7-回退方案"><a href="#7-回退方案" class="headerlink" title="7. 回退方案"></a>7. 回退方案</h2><p>如果新内核无法正常启动：</p>
-<ol>
-<li><p>在 <strong>开机 GRUB 菜单</strong> 中手动选择旧内核 <code>3.10.0-1160.el7.x86_64</code>。</p>
-</li>
-<li><p>或者在系统中改回旧内核为默认：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">awk -F\&#x27; <span class="string">&#x27;$1==&quot;menuentry &quot; &#123;print $2&#125;&#x27;</span> /etc/grub2.cfg</span><br><span class="line">grub2-set-default 1</span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
+<h1 id="板卡刷机"><a href="#板卡刷机" class="headerlink" title="板卡刷机"></a>板卡刷机</h1><h2 id="开启刷机模式"><a href="#开启刷机模式" class="headerlink" title="开启刷机模式"></a>开启刷机模式</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">marstool socqfil N M on</span><br><span class="line"></span><br><span class="line">upgrade_tool ld</span><br><span class="line"></span><br><span class="line">upgrade_tool uf /userdata/roms/factory/baserom/update.img</span><br></pre></td></tr></table></figure>
 
-<p>（其中 <code>1</code> 表示旧内核在 grub 菜单中的顺序）</p>
-</li>
-</ol>
-<hr>
+<h1 id="板卡更新内核"><a href="#板卡更新内核" class="headerlink" title="板卡更新内核"></a>板卡更新内核</h1><h2 id="查看内核版本"><a href="#查看内核版本" class="headerlink" title="查看内核版本"></a>查看内核版本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /prod/cpuinfo</span><br></pre></td></tr></table></figure>
+
+<h2 id="开启刷机模式-1"><a href="#开启刷机模式-1" class="headerlink" title="开启刷机模式"></a>开启刷机模式</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">marstool socqfil N M on</span><br></pre></td></tr></table></figure>
+
+<h2 id="更新内核"><a href="#更新内核" class="headerlink" title="更新内核"></a>更新内核</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">upgrade_tool di -boot /userdata/boot-x.x.x.img</span><br></pre></td></tr></table></figure>
+
+<h1 id="串口连接板卡排查故障"><a href="#串口连接板卡排查故障" class="headerlink" title="串口连接板卡排查故障"></a>串口连接板卡排查故障</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先关闭后台服务对BMC串口的占用</span></span><br><span class="line">systemctl stop marssoc-console</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行命令将指定SoC串口连接到BMC</span></span><br><span class="line">marstool socuartin N M on</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用串口程序minicom查看soc串口输出，</span></span><br><span class="line"><span class="comment"># 如果有输出，则可以看到输出内容，如果没有输出内容则soc可能已经挂死，需要重启</span></span><br><span class="line">minicom -D /dev/ttyS0 -b 1500000</span><br><span class="line"></span><br><span class="line">ctrl+A 然后按一下o，第三选项，倒数第二个是调整为no，然后新开一个终端重启这张卡，如果仍然不能输入，则标记异常：进不了系统</span><br><span class="line"></span><br><span class="line">marstool socpwr N M rst</span><br><span class="line"></span><br><span class="line"><span class="comment"># 退出串口的方法1</span></span><br><span class="line">ctrl+A 然后按一下Q</span><br></pre></td></tr></table></figure>
+
+
+
 
       </div>
       
         <div class="prev-or-next">
           <div class="post-foot-next">
             
-              <a href="/2025/09/01/Nginx/" target="_self">
+              <a href="/2026/06/17/JumpServer/" target="_self">
                 <i class="iconfont icon-chevronleft"></i>
                 <span>上一页</span>
               </a>
@@ -246,15 +236,27 @@
           <div class="post-attach">
             <span class="post-pubtime">
               <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
-              2026-06-05 09:57:36
+              2026-06-24 10:20:25
             </span>
             
                   <span class="post-tags">
                     <i class="iconfont icon-tags mr-10" title="标签"></i>
                     
                     <span class="span--tag mr-8">
-                      <a href="/tags/CentOS7/" title="CentOS7">
-                        #CentOS7
+                      <a href="/tags/%E5%87%8C%E7%82%B9/" title="凌点">
+                        #凌点
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="服务器">
+                        #服务器
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8C/" title="操作手册">
+                        #操作手册
                       </a>
                     </span>
                     
@@ -262,11 +264,6 @@
               
           </div>
           <div class="post-foot-prev">
-            
-              <a href="/2025/11/08/Zabbix/" target="_self">
-                <span>下一页</span>
-                <i class="iconfont icon-chevronright"></i>
-              </a>
             
           </div>
         </div>
@@ -280,7 +277,7 @@
     <div class="title">目录</div>
     <div class="catalog-content">
       
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CentOS7-%E7%A6%BB%E7%BA%BF%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8"><span class="toc-text">CentOS7 离线升级内核</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%8E%AF%E5%A2%83%E7%A1%AE%E8%AE%A4"><span class="toc-text">1. 环境确认</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%87%86%E5%A4%87-RPM-%E5%8C%85"><span class="toc-text">2. 准备 RPM 包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%A7%BB%E9%99%A4%E6%97%A7%E5%B7%A5%E5%85%B7%EF%BC%88%E9%81%BF%E5%85%8D%E5%86%B2%E7%AA%81%EF%BC%89"><span class="toc-text">3. 移除旧工具（避免冲突）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%AE%89%E8%A3%85%E6%96%B0%E5%86%85%E6%A0%B8%E5%8F%8A%E5%B7%A5%E5%85%B7"><span class="toc-text">4. 安装新内核及工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%9B%B4%E6%96%B0-GRUB-%E5%BC%95%E5%AF%BC%E9%85%8D%E7%BD%AE"><span class="toc-text">5. 更新 GRUB 引导配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E9%87%8D%E5%90%AF%E5%B9%B6%E9%AA%8C%E8%AF%81"><span class="toc-text">6. 重启并验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E5%9B%9E%E9%80%80%E6%96%B9%E6%A1%88"><span class="toc-text">7. 回退方案</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-text">基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%97%E5%87%BA%E5%85%A8%E9%83%A8%E6%9D%BF%E5%8D%A1%E5%88%97%E8%A1%A8"><span class="toc-text">列出全部板卡列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%97%E5%87%BA%E6%8C%87%E5%AE%9A%E5%88%80%E7%89%87%E7%9A%84%E6%9D%BF%E5%8D%A1%E5%88%97%E8%A1%A8"><span class="toc-text">列出指定刀片的板卡列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E6%9D%BF%E5%8D%A1ADB%E6%A8%A1%E5%BC%8F"><span class="toc-text">开启板卡ADB模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%90%AF%E6%9D%BF%E5%8D%A1"><span class="toc-text">重启板卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%9D%BF%E5%8D%A1IP"><span class="toc-text">配置板卡IP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E6%9D%BF%E5%8D%A1%E5%88%B7%E6%9C%BA%E6%A8%A1%E5%BC%8F"><span class="toc-text">开启板卡刷机模式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%BF%E5%8D%A1%E5%88%B7%E6%9C%BA"><span class="toc-text">板卡刷机</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E5%88%B7%E6%9C%BA%E6%A8%A1%E5%BC%8F"><span class="toc-text">开启刷机模式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9D%BF%E5%8D%A1%E6%9B%B4%E6%96%B0%E5%86%85%E6%A0%B8"><span class="toc-text">板卡更新内核</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC"><span class="toc-text">查看内核版本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%90%AF%E5%88%B7%E6%9C%BA%E6%A8%A1%E5%BC%8F-1"><span class="toc-text">开启刷机模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E5%86%85%E6%A0%B8"><span class="toc-text">更新内核</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%B2%E5%8F%A3%E8%BF%9E%E6%8E%A5%E6%9D%BF%E5%8D%A1%E6%8E%92%E6%9F%A5%E6%95%85%E9%9A%9C"><span class="toc-text">串口连接板卡排查故障</span></a></li></ol>
       
     </div>
   </div>
@@ -589,12 +586,12 @@
       </a>
       <div class="share-content hidden">
         
-          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + CentOS7%E7%A6%BB%E7%BA%BF%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8 + '&url=' + https%3A%2F%2Fzcxx0322.github.io%2F2025%2F09%2F01%2FCentOS7%25E7%25A6%25BB%25E7%25BA%25BF%25E5%258D%2587%25E7%25BA%25A7%25E5%2586%2585%25E6%25A0%25B8%2F + '" target="_blank" title="Twitter">
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + %E5%87%8C%E7%82%B9(Leadien)%E6%93%8D%E4%BD%9C%E6%96%87%E6%A1%A3 + '&url=' + https%3A%2F%2Fzcxx0322.github.io%2F2026%2F06%2F24%2F%25E5%2587%258C%25E7%2582%25B9%25E6%259C%258D%25E5%258A%25A1%25E5%2599%25A8%25E6%2593%258D%25E4%25BD%259C%25E6%2596%2587%25E6%25A1%25A3%2F + '" target="_blank" title="Twitter">
             <i class="iconfont icon-twitter"></i>
           </a>
         
         
-          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://zcxx0322.github.io/2025/09/01/CentOS7%E7%A6%BB%E7%BA%BF%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8/" target="_blank" title="Facebook">
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://zcxx0322.github.io/2026/06/24/%E5%87%8C%E7%82%B9%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%93%8D%E4%BD%9C%E6%96%87%E6%A1%A3/" target="_blank" title="Facebook">
             <i class="iconfont icon-facebooksquare"></i>
           </a>
         
