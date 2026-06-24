@@ -1,157 +1,137 @@
-/* Pure Theme — search.js
-   Requires hexo-generator-search plugin → generates /search.xml
-   Install: npm install hexo-generator-search --save
-   Config in _config.yml:
-     search:
-       path: search.xml
-       field: post
-       content: true
-*/
-(function () {
+// A local search script with the help of [hexo-generator-search](https://github.com/PaicHyperionDev/hexo-generator-search)
+// Copyright (C) 2017 
+// Liam Huang <http://github.com/Liam0205>
+// This library is free software; you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as
+// published by the Free Software Foundation; either version 2.1 of the
+// License, or (at your option) any later version.
+// 
+// This library is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+// 
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+// 02110-1301 USA
+// 
+
+var searchFunc = function (path, search_id, content_id) {
+  // 0x00. environment initialization
   'use strict';
+  // var "<i id='local-search-close'>×</i>";
+  var $input = document.getElementById(search_id);
+  var $resultContent = document.getElementById(content_id);
+  $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+  $.ajax({
+    // 0x01. load xml file
+    url: path,
+    dataType: "xml",
+    success: function (xmlResponse) {
+      // 0x02. parse xml file
+      var datas = $("entry", xmlResponse).map(function () {
+        return {
+          title: $("title", this).text(),
+          content: $("content", this).text(),
+          url: $("url", this).text()
+        };
+      }).get();
+      $resultContent.innerHTML = "";
 
-  var searchInput   = document.getElementById('searchInput');
-  var searchResults = document.getElementById('searchResults');
-  var searchOverlay = document.getElementById('searchOverlay');
-  if (!searchInput || !searchResults) return;
-
-  var searchPath  = (searchOverlay && searchOverlay.dataset.searchPath) || '/search.xml';
-  var searchData  = null;
-  var loading     = false;
-  var controller  = null;  // AbortController for cancelling stale requests
-
-  function escHtml(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-  function escRe(s) {
-    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
-  function highlight(text, keywords) {
-    var escaped = escHtml(text);
-    keywords.forEach(function (kw) {
-      if (!kw) return;
-      var re = new RegExp('(' + escRe(escHtml(kw)) + ')', 'gi');
-      escaped = escaped.replace(re, '<mark>$1</mark>');
-    });
-    return escaped;
-  }
-
-  function loadSearchData(cb) {
-    if (searchData) { cb(null, searchData); return; }
-    if (loading) return;
-    loading = true;
-    searchResults.innerHTML = '<p class="search-hint">加载搜索数据…</p>';
-
-    // Cancel any in-flight request
-    if (controller) controller.abort();
-    controller = new AbortController();
-
-    fetch(searchPath, { signal: controller.signal })
-      .then(function (res) {
-        loading = false;
-        if (!res.ok) { cb('HTTP ' + res.status); return; }
-        return res.text();
-      })
-      .then(function (text) {
-        if (text === undefined) return; // errored already
-        try {
-          var parser  = new DOMParser();
-          var xmlDoc  = parser.parseFromString(text, 'text/xml');
-          var parseErr = xmlDoc.querySelector('parsererror');
-          if (parseErr) { cb('XML parse error'); return; }
-
-          var entries = xmlDoc.querySelectorAll('entry');
-          searchData  = [];
-          entries.forEach(function (entry) {
-            var titleEl   = entry.querySelector('title');
-            var urlEl     = entry.querySelector('url');
-            var contentEl = entry.querySelector('content');
-            searchData.push({
-              title:   titleEl   ? (titleEl.textContent   || '') : '',
-              url:     urlEl     ? (urlEl.textContent     || '') : '',
-              content: contentEl ? (contentEl.textContent || '') : '',
-            });
-          });
-          cb(null, searchData);
-        } catch (e) {
-          cb(String(e));
+      $input.addEventListener('input', function () {
+        // 0x03. parse query to keywords list
+        var str = '<ul class=\"search-result-list\">';
+        var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+        $resultContent.innerHTML = "";
+        if (this.value.trim().length <= 0) {
+          return;
         }
-      })
-      .catch(function (err) {
-        if (err.name === 'AbortError') return; // intentionally cancelled
-        loading = false;
-        cb('网络错误或超时');
-      });
-  }
+        // 0x04. perform local searching
+        datas.forEach(function (data) {
+          var isMatch = true;
+          var content_index = [];
+          if (!data.title || data.title.trim() === '') {
+            data.title = "Untitled";
+          }
+          var orig_data_title = data.title.trim();
+          var data_title = orig_data_title.toLowerCase();
+          var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+          var data_content = orig_data_content.toLowerCase();
+          var data_url = data.url;
+          var index_title = -1;
+          var index_content = -1;
+          var first_occur = -1;
+          // only match artiles with not empty contents
+          if (data_content !== '') {
+            keywords.forEach(function (keyword, i) {
+              index_title = data_title.indexOf(keyword);
+              index_content = data_content.indexOf(keyword);
 
-  function doSearch(query) {
-    query = query.trim();
-    if (!query) {
-      searchResults.innerHTML = '<p class="search-hint">输入关键词开始搜索</p>';
-      return;
-    }
+              if (index_title < 0 && index_content < 0) {
+                isMatch = false;
+              } else {
+                if (index_content < 0) {
+                  index_content = 0;
+                }
+                if (i == 0) {
+                  first_occur = index_content;
+                }
+                // content_index.push({index_content:index_content, keyword_len:keyword_len});
+              }
+            });
+          } else {
+            isMatch = false;
+          }
+          // 0x05. show search results
+          if (isMatch) {
+            str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+            var content = orig_data_content;
+            if (first_occur >= 0) {
+              // cut out 100 characters
+              var start = first_occur - 20;
+              var end = first_occur + 80;
 
-    loadSearchData(function (err, data) {
-      if (err) {
-        searchResults.innerHTML =
-          '<p class="search-no-result">搜索数据加载失败：' + escHtml(err) +
-          '<br><small>请确认已安装 hexo-generator-search 并重新生成站点</small></p>';
-        return;
-      }
+              if (start < 0) {
+                start = 0;
+              }
 
-      var keywords = query.toLowerCase().split(/\s+/).filter(Boolean);
-      var results  = [];
+              if (start == 0) {
+                end = 100;
+              }
 
-      data.forEach(function (item) {
-        var titleLow   = item.title.toLowerCase();
-        var contentLow = item.content.toLowerCase();
-        var score = 0;
-        keywords.forEach(function (kw) {
-          if (titleLow.indexOf(kw)   !== -1) score += 10;
-          if (contentLow.indexOf(kw) !== -1) score += 1;
+              if (end > content.length) {
+                end = content.length;
+              }
+
+              var match_content = content.substr(start, end);
+
+              // highlight all keywords
+              keywords.forEach(function (keyword) {
+                var regS = new RegExp(keyword, "gi");
+                match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+              });
+
+              str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+            }
+            str += "</li>";
+          }
         });
-        if (score === 0) return;
-
-        // Build excerpt around first keyword hit
-        var idx     = contentLow.indexOf(keywords[0]);
-        var start   = Math.max(0, idx - 60);
-        var excerpt = item.content.substring(start, start + 180).replace(/<[^>]+>/g, '');
-        if (start > 0) excerpt = '…' + excerpt;
-        if (excerpt.length === 180) excerpt += '…';
-
-        results.push({ item: item, score: score, excerpt: excerpt });
+        str += "</ul>";
+        if (str.indexOf('<li>') === -1) {
+          return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+        }
+        $resultContent.innerHTML = str;
       });
-
-      results.sort(function (a, b) { return b.score - a.score; });
-
-      if (results.length === 0) {
-        searchResults.innerHTML =
-          '<p class="search-no-result">没有找到与 &quot;' + escHtml(query) + '&quot; 相关的文章</p>';
-        return;
-      }
-
-      var html = results.slice(0, 20).map(function (r) {
-        return '<a href="' + escHtml(r.item.url) + '" class="search-result-item">' +
-          '<div class="search-result-title">' + highlight(r.item.title, keywords) + '</div>' +
-          '<div class="search-result-excerpt">' + highlight(r.excerpt, keywords) + '</div>' +
-          '</a>';
-      }).join('');
-
-      searchResults.innerHTML = html;
-    });
-  }
-
-  var timer;
-  searchInput.addEventListener('input', function () {
-    clearTimeout(timer);
-    timer = setTimeout(function () { doSearch(searchInput.value); }, 250);
+    }
   });
+  $(document).on('click', '#search-close-icon', function() {
+    $('#search-input').val('');
+    $('#search-result').html('');
+  });
+}
 
-  // Trigger search if input already has value (e.g. after browser back)
-  if (searchInput.value) doSearch(searchInput.value);
-
-})();
+var getSearchFile = function(){
+    var path = "/search.xml";
+    searchFunc(path, 'search-input', 'search-result');
+}
