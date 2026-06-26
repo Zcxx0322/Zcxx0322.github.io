@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN" color-mode="light">
+
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="Zcxx0322" />
+  <!-- Open Graph Description 简短摘要-->
+  
+  <!-- 用于搜索引擎的文章摘要 -->
+  
+  
+  
+  <title>
+    
+      RKE2高可用集群 
+      
+      
+      |
+    
+     Zcxx0322运维杂记
+  </title>
+
+  
+    <link rel="apple-touch-icon" href="/img/zcxx0322.png">
+    <link rel="icon" href="/img/zcxx0322.png">
+  
+
+  <!-- Raleway-Font -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+
+  <!-- hexo site css -->
+  <link rel="stylesheet" href="/css/main.css" />
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1886449_67xjft27j1l.css" />
+  <!-- 代码块风格 -->
+  
+    
+<link rel="stylesheet" href="/css/figcaption/mac-block.css">
+
+  
+
+  <!-- jquery3.3.1 -->
+  
+    <script defer type="text/javascript" src="/plugins/jquery.min.js"></script>
+  
+
+  <!-- fancybox -->
+  
+    <link href="/plugins/jquery.fancybox.min.css" rel="stylesheet">
+    <script defer type="text/javascript" src="/plugins/jquery.fancybox.min.js"></script>
+  
+  
+<script src="/js/fancybox.js"></script>
+
+
+  
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-G41W5TCNY7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-G41W5TCNY7');
+    </script>
+  
+
+  
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  <script>
+    var html = document.documentElement
+    const colorMode = localStorage.getItem('color-mode')
+    if (colorMode) {
+      document.documentElement.setAttribute('color-mode', colorMode)
+    }
+  </script>
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+  <body>
+    <div id="app">
+      <div class="header">
+  <div class="avatar">
+    <a href="/">
+      <!-- 头像取消懒加载，添加no-lazy -->
+      
+        <img src="/img/zcxx0322.png" alt="">
+      
+    </a>
+    <div class="nickname"><a href="/">Zcxx0322</a></div>
+  </div>
+  <div class="navbar">
+    <ul>
+      
+        <li class="nav-item" data-path="/">
+          <a href="/">主页</a>
+        </li>
+      
+        <li class="nav-item" data-path="/archives/">
+          <a href="/archives/">归档</a>
+        </li>
+      
+        <li class="nav-item" data-path="/tags/">
+          <a href="/tags/">标签</a>
+        </li>
+      
+        <li class="nav-item" data-path="/about/">
+          <a href="/about/">关于作者</a>
+        </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+<script src="/js/activeNav.js"></script>
+
+
+
+      <div class="flex-container">
+        <!-- 文章详情页，展示文章具体内容，url形式：https://yoursite/文章标题/ -->
+<!-- 同时为「标签tag」，「朋友friend」，「分类categories」，「关于about」页面的承载页面，具体展示取决于page.type -->
+
+
+  <!-- LaTex Display -->
+
+  
+    <script async type="text/javascript" src="/plugins/mathjax/tex-chtml.js"></script>
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      }
+    }
+  </script>
+
+
+
+
+
+  <!-- clipboard -->
+
+  
+    <script async type="text/javascript" src="/plugins/clipboard.min.js"></script>
+  
+  
+<script src="/js/codeCopy.js"></script>
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <!-- 文章内容页 url形式：https://yoursite/文章标题/ -->
+  <div class="container post-details" id="post-details">
+    <div class="post-content">
+      <div class="post-title">RKE2高可用集群</div>
+      <div class="post-attach">
+        <span class="post-pubtime">
+          <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+          2026-06-26 15:11:51
+        </span>
+        
+              <span class="post-tags">
+                <i class="iconfont icon-tags mr-10" title="标签"></i>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Kubernetes/" title="Kubernetes">
+                    #Kubernetes
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/RKE2/" title="RKE2">
+                    #RKE2
+                  </a>
+                </span>
+                
+                <span class="span--tag mr-8">
+                  <a href="/tags/Rancher/" title="Rancher">
+                    #Rancher
+                  </a>
+                </span>
+                
+              </span>
+          
+      </div>
+      <div class="markdown-body">
+        <hr>
+<h2 id="一、环境规划"><a href="#一、环境规划" class="headerlink" title="一、环境规划"></a>一、环境规划</h2><table>
+<thead>
+<tr>
+<th>角色</th>
+<th>IP</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RKE2 Server (Master)</td>
+<td>192.168.122.10</td>
+<td>控制平面 + etcd</td>
+</tr>
+<tr>
+<td>RKE2 Server (Master)</td>
+<td>192.168.122.11</td>
+<td>控制平面 + etcd</td>
+</tr>
+<tr>
+<td>RKE2 Server (Master)</td>
+<td>192.168.122.12</td>
+<td>控制平面 + etcd</td>
+</tr>
+<tr>
+<td>RKE2 Agent (Worker)</td>
+<td>192.168.122.13</td>
+<td>工作节点</td>
+</tr>
+<tr>
+<td>RKE2 Agent (Worker)</td>
+<td>192.168.122.14</td>
+<td>工作节点</td>
+</tr>
+<tr>
+<td>Rancher (Docker)</td>
+<td>192.168.122.15</td>
+<td>单节点 Docker 部署 Rancher</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="二、所有节点（1-5-号）通用准备"><a href="#二、所有节点（1-5-号）通用准备" class="headerlink" title="二、所有节点（1-5 号）通用准备"></a>二、所有节点（1-5 号）通用准备</h2><p>在 <strong>192.168.122.10 ~ 192.168.122.14</strong> 上依次执行：</p>
+<h3 id="2-1-系统基础配置"><a href="#2-1-系统基础配置" class="headerlink" title="2.1 系统基础配置"></a>2.1 系统基础配置</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新系统</span></span><br><span class="line"><span class="built_in">sudo</span> apt update &amp;&amp; <span class="built_in">sudo</span> apt upgrade -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装必要工具</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y curl vim net-tools telnet chrony</span><br><span class="line"></span><br><span class="line"><span class="comment"># 禁用 Swap</span></span><br><span class="line"><span class="built_in">sudo</span> swapoff -a</span><br><span class="line"><span class="built_in">sudo</span> sed -i <span class="string">&#x27;/ swap / s/^\(.*\)$/#\1/g&#x27;</span> /etc/fstab</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载内核模块</span></span><br><span class="line"><span class="built_in">sudo</span> modprobe overlay</span><br><span class="line"><span class="built_in">sudo</span> modprobe br_netfilter</span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOF | sudo tee /etc/modules-load.d/rke2.conf</span></span><br><span class="line"><span class="string">overlay</span></span><br><span class="line"><span class="string">br_netfilter</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置内核参数</span></span><br><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOF | sudo tee /etc/sysctl.d/99-rke2.conf</span></span><br><span class="line"><span class="string">net.bridge.bridge-nf-call-iptables  = 1</span></span><br><span class="line"><span class="string">net.bridge.bridge-nf-call-ip6tables = 1</span></span><br><span class="line"><span class="string">net.ipv4.ip_forward                 = 1</span></span><br><span class="line"><span class="string">net.ipv4.conf.all.forwarding        = 1</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> sysctl --system</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置主机名（分别在每台机器上执行对应的）</span></span><br><span class="line"><span class="comment"># 192.168.122.10:</span></span><br><span class="line"><span class="built_in">sudo</span> hostnamectl set-hostname rke2-master01</span><br><span class="line"><span class="comment"># 192.168.122.11:</span></span><br><span class="line"><span class="built_in">sudo</span> hostnamectl set-hostname rke2-master02</span><br><span class="line"><span class="comment"># 192.168.122.12:</span></span><br><span class="line"><span class="built_in">sudo</span> hostnamectl set-hostname rke2-master03</span><br><span class="line"><span class="comment"># 192.168.122.13:</span></span><br><span class="line"><span class="built_in">sudo</span> hostnamectl set-hostname rke2-worker01</span><br><span class="line"><span class="comment"># 192.168.122.14:</span></span><br><span class="line"><span class="built_in">sudo</span> hostnamectl set-hostname rke2-worker02</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置 hosts</span></span><br><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOF | sudo tee -a /etc/hosts</span></span><br><span class="line"><span class="string">192.168.122.10 rke2-master01</span></span><br><span class="line"><span class="string">192.168.122.11 rke2-master02</span></span><br><span class="line"><span class="string">192.168.122.12 rke2-master03</span></span><br><span class="line"><span class="string">192.168.122.13 rke2-worker01</span></span><br><span class="line"><span class="string">192.168.122.14 rke2-worker02</span></span><br><span class="line"><span class="string">192.168.122.15 rancher-server</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-防火墙配置（UFW）"><a href="#2-2-防火墙配置（UFW）" class="headerlink" title="2.2 防火墙配置（UFW）"></a>2.2 防火墙配置（UFW）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装并启用 UFW（如未安装）</span></span><br><span class="line"><span class="built_in">sudo</span> apt install -y ufw</span><br><span class="line"></span><br><span class="line"><span class="comment"># 允许 SSH</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow 22/tcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 允许 Kubernetes API (6443)</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow from 192.168.122.0/24 to any port 6443 proto tcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 允许 RKE2 Supervisor API (9345)</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow from 192.168.122.0/24 to any port 9345 proto tcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 允许 etcd 通信 (2379-2381) - 仅控制平面节点之间</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow from 192.168.122.0/24 to any port 2379:2381 proto tcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 允许 Kubelet 指标 (10250)</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow from 192.168.122.0/24 to any port 10250 proto tcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 允许 Canal/Flannel VXLAN (8472 UDP)</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow from 192.168.122.0/24 to any port 8472 proto udp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 允许 Canal 健康检查 (9099 TCP)</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow from 192.168.122.0/24 to any port 9099 proto tcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 允许 NodePort 范围 (30000-32767)</span></span><br><span class="line"><span class="built_in">sudo</span> ufw allow from 192.168.122.0/24 to any port 30000:32767 proto tcp</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用防火墙</span></span><br><span class="line"><span class="built_in">sudo</span> ufw --force <span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-NetworkManager-配置（重要）"><a href="#2-3-NetworkManager-配置（重要）" class="headerlink" title="2.3 NetworkManager 配置（重要）"></a>2.3 NetworkManager 配置（重要）</h3><p>RKE2 与 NetworkManager 存在已知冲突，需要配置忽略 CNI 接口 ：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/NetworkManager/conf.d/</span><br><span class="line"></span><br><span class="line"><span class="built_in">cat</span> &lt;&lt;<span class="string">EOF | sudo tee /etc/NetworkManager/conf.d/rke2-canal.conf</span></span><br><span class="line"><span class="string">[keyfile]</span></span><br><span class="line"><span class="string">unmanaged-devices=interface-name:flannel*;interface-name:cali*;interface-name:tunl*;interface-name:vxlan.calico;interface-name:vxlan-v6.calico;interface-name:wireguard.cali;interface-name:wg-v6.cali</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> systemctl reload NetworkManager</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-配置镜像加速（registries-yaml）"><a href="#2-4-配置镜像加速（registries-yaml）" class="headerlink" title="2.4 配置镜像加速（registries.yaml）"></a>2.4 配置镜像加速（registries.yaml）</h3><p>您提供的 <code>registries.yaml</code> 配置，在 <strong>所有 5 台 K8s 节点</strong> 上执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/rancher/rke2</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/rancher/rke2/registries.yaml &gt; /dev/null &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">mirrors:</span><br><span class="line">  docker.io:</span><br><span class="line">    endpoint:</span><br><span class="line">      - <span class="string">&quot;https://docker.m.daocloud.io&quot;</span></span><br><span class="line">      - <span class="string">&quot;https://docker.unsee.tech&quot;</span></span><br><span class="line">      - <span class="string">&quot;https://docker.1ms.run&quot;</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="三、部署-RKE2-Server-节点（Master）"><a href="#三、部署-RKE2-Server-节点（Master）" class="headerlink" title="三、部署 RKE2 Server 节点（Master）"></a>三、部署 RKE2 Server 节点（Master）</h2><h3 id="3-1-第一个-Master-节点（192-168-122-10）"><a href="#3-1-第一个-Master-节点（192-168-122-10）" class="headerlink" title="3.1 第一个 Master 节点（192.168.122.10）"></a>3.1 第一个 Master 节点（192.168.122.10）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建配置文件</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/rancher/rke2</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/rancher/rke2/config.yaml &gt; /dev/null &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">token: my-rke2-cluster-token-2026</span><br><span class="line">node-name: rke2-master01</span><br><span class="line">tls-san:</span><br><span class="line">  - 192.168.122.10</span><br><span class="line">  - 192.168.122.11</span><br><span class="line">  - 192.168.122.12</span><br><span class="line">  - rke2-master01</span><br><span class="line">  - rke2-master02</span><br><span class="line">  - rke2-master03</span><br><span class="line">cluster-cidr: 10.42.0.0/16</span><br><span class="line">service-cidr: 10.43.0.0/16</span><br><span class="line">cluster-dns: 10.43.0.10</span><br><span class="line">write-kubeconfig-mode: <span class="string">&quot;0644&quot;</span></span><br><span class="line">kube-proxy-arg:</span><br><span class="line">  - <span class="string">&quot;--proxy-mode=ipvs&quot;</span></span><br><span class="line">  - <span class="string">&quot;--ipvs-strict-arp=true&quot;</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 RKE2 Server</span></span><br><span class="line">curl -sfL https://get.rke2.io | <span class="built_in">sudo</span> sh -</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用并启动服务</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> rke2-server.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl start rke2-server.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看日志</span></span><br><span class="line"><span class="built_in">sudo</span> journalctl -u rke2-server -f</span><br></pre></td></tr></table></figure>
+
+<p>等待日志显示集群初始化完成（约 2-5 分钟），然后执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 配置环境变量</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=$PATH:/var/lib/rancher/rke2/bin&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export KUBECONFIG=/etc/rancher/rke2/rke2.yaml&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br><span class="line"></span><br><span class="line"><span class="comment"># 验证节点</span></span><br><span class="line">kubectl get nodes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看生成的 token（供其他节点加入使用）</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cat</span> /var/lib/rancher/rke2/server/token</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-第二个-Master-节点（192-168-122-11）"><a href="#3-2-第二个-Master-节点（192-168-122-11）" class="headerlink" title="3.2 第二个 Master 节点（192.168.122.11）"></a>3.2 第二个 Master 节点（192.168.122.11）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/rancher/rke2</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/rancher/rke2/config.yaml &gt; /dev/null &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">server: https://192.168.122.10:9345</span><br><span class="line">token: my-rke2-cluster-token-2026</span><br><span class="line">node-name: rke2-master02</span><br><span class="line">tls-san:</span><br><span class="line">  - 192.168.122.10</span><br><span class="line">  - 192.168.122.11</span><br><span class="line">  - 192.168.122.12</span><br><span class="line">  - rke2-master01</span><br><span class="line">  - rke2-master02</span><br><span class="line">  - rke2-master03</span><br><span class="line">cluster-cidr: 10.42.0.0/16</span><br><span class="line">service-cidr: 10.43.0.0/16</span><br><span class="line">cluster-dns: 10.43.0.10</span><br><span class="line">write-kubeconfig-mode: <span class="string">&quot;0644&quot;</span></span><br><span class="line">kube-proxy-arg:</span><br><span class="line">  - <span class="string">&quot;--proxy-mode=ipvs&quot;</span></span><br><span class="line">  - <span class="string">&quot;--ipvs-strict-arp=true&quot;</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 RKE2 Server</span></span><br><span class="line">curl -sfL https://get.rke2.io | <span class="built_in">sudo</span> sh -</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> rke2-server.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl start rke2-server.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置环境变量</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=$PATH:/var/lib/rancher/rke2/bin&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export KUBECONFIG=/etc/rancher/rke2/rke2.yaml&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-第三个-Master-节点（192-168-122-12）"><a href="#3-3-第三个-Master-节点（192-168-122-12）" class="headerlink" title="3.3 第三个 Master 节点（192.168.122.12）"></a>3.3 第三个 Master 节点（192.168.122.12）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/rancher/rke2</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/rancher/rke2/config.yaml &gt; /dev/null &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">server: https://192.168.122.10:9345</span><br><span class="line">token: my-rke2-cluster-token-2026</span><br><span class="line">node-name: rke2-master03</span><br><span class="line">tls-san:</span><br><span class="line">  - 192.168.122.10</span><br><span class="line">  - 192.168.122.11</span><br><span class="line">  - 192.168.122.12</span><br><span class="line">  - rke2-master01</span><br><span class="line">  - rke2-master02</span><br><span class="line">  - rke2-master03</span><br><span class="line">cluster-cidr: 10.42.0.0/16</span><br><span class="line">service-cidr: 10.43.0.0/16</span><br><span class="line">cluster-dns: 10.43.0.10</span><br><span class="line">write-kubeconfig-mode: <span class="string">&quot;0644&quot;</span></span><br><span class="line">kube-proxy-arg:</span><br><span class="line">  - <span class="string">&quot;--proxy-mode=ipvs&quot;</span></span><br><span class="line">  - <span class="string">&quot;--ipvs-strict-arp=true&quot;</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 RKE2 Server</span></span><br><span class="line">curl -sfL https://get.rke2.io | <span class="built_in">sudo</span> sh -</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> rke2-server.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl start rke2-server.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置环境变量</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=$PATH:/var/lib/rancher/rke2/bin&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export KUBECONFIG=/etc/rancher/rke2/rke2.yaml&#x27;</span> &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="四、部署-RKE2-Agent-节点（Worker）"><a href="#四、部署-RKE2-Agent-节点（Worker）" class="headerlink" title="四、部署 RKE2 Agent 节点（Worker）"></a>四、部署 RKE2 Agent 节点（Worker）</h2><h3 id="4-1-Worker-节点-1（192-168-122-13）"><a href="#4-1-Worker-节点-1（192-168-122-13）" class="headerlink" title="4.1 Worker 节点 1（192.168.122.13）"></a>4.1 Worker 节点 1（192.168.122.13）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/rancher/rke2</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/rancher/rke2/config.yaml &gt; /dev/null &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">server: https://192.168.122.10:9345</span><br><span class="line">token: my-rke2-cluster-token-2026</span><br><span class="line">node-name: rke2-worker01</span><br><span class="line">kube-proxy-arg:</span><br><span class="line">  - <span class="string">&quot;--proxy-mode=ipvs&quot;</span></span><br><span class="line">  - <span class="string">&quot;--ipvs-strict-arp=true&quot;</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 RKE2 Agent</span></span><br><span class="line">curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE=<span class="string">&quot;agent&quot;</span> <span class="built_in">sudo</span> sh -</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> rke2-agent.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl start rke2-agent.service</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看日志</span></span><br><span class="line"><span class="built_in">sudo</span> journalctl -u rke2-agent -f</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-Worker-节点-2（192-168-122-14）"><a href="#4-2-Worker-节点-2（192-168-122-14）" class="headerlink" title="4.2 Worker 节点 2（192.168.122.14）"></a>4.2 Worker 节点 2（192.168.122.14）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/rancher/rke2</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/rancher/rke2/config.yaml &gt; /dev/null &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">server: https://192.168.122.10:9345</span><br><span class="line">token: my-rke2-cluster-token-2026</span><br><span class="line">node-name: rke2-worker02</span><br><span class="line">kube-proxy-arg:</span><br><span class="line">  - <span class="string">&quot;--proxy-mode=ipvs&quot;</span></span><br><span class="line">  - <span class="string">&quot;--ipvs-strict-arp=true&quot;</span></span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 RKE2 Agent</span></span><br><span class="line">curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE=<span class="string">&quot;agent&quot;</span> <span class="built_in">sudo</span> sh -</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> rke2-agent.service</span><br><span class="line"><span class="built_in">sudo</span> systemctl start rke2-agent.service</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="五、验证-K8s-集群状态"><a href="#五、验证-K8s-集群状态" class="headerlink" title="五、验证 K8s 集群状态"></a>五、验证 K8s 集群状态</h2><p>在任意 Master 节点上执行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看所有节点</span></span><br><span class="line">kubectl get nodes -o wide</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看所有 Pod</span></span><br><span class="line">kubectl get pods -A</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看集群信息</span></span><br><span class="line">kubectl cluster-info</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看 etcd 成员（确认高可用）</span></span><br><span class="line">kubectl -n kube-system <span class="built_in">exec</span> -it etcd-rke2-master01 -- etcdctl \</span><br><span class="line">  --cacert=/var/lib/rancher/rke2/server/tls/etcd/server-ca.crt \</span><br><span class="line">  --cert=/var/lib/rancher/rke2/server/tls/etcd/server-client.crt \</span><br><span class="line">  --key=/var/lib/rancher/rke2/server/tls/etcd/server-client.key \</span><br><span class="line">  member list</span><br></pre></td></tr></table></figure>
+
+<p>预期输出应包含 3 个 <code>control-plane,etcd,master</code> 角色的节点和 2 个 <code>&lt;none&gt;</code> 角色的 Worker 节点，全部状态为 <code>Ready</code> 。</p>
+<hr>
+<h2 id="六、部署-Rancher（Docker-单节点）"><a href="#六、部署-Rancher（Docker-单节点）" class="headerlink" title="六、部署 Rancher（Docker 单节点）"></a>六、部署 Rancher（Docker 单节点）</h2><p>在 <strong>192.168.122.15</strong> 上执行：</p>
+<h3 id="6-1-安装-Docker"><a href="#6-1-安装-Docker" class="headerlink" title="6.1 安装 Docker"></a>6.1 安装 Docker</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 更新系统</span></span><br><span class="line"><span class="built_in">sudo</span> apt update &amp;&amp; <span class="built_in">sudo</span> apt upgrade -y</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装 Docker</span></span><br><span class="line">curl -fsSL https://get.docker.com | <span class="built_in">sudo</span> sh -</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> docker</span><br><span class="line"><span class="built_in">sudo</span> systemctl start docker</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加当前用户到 docker 组（可选）</span></span><br><span class="line"><span class="built_in">sudo</span> usermod -aG docker <span class="variable">$USER</span></span><br><span class="line">newgrp docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-2-配置-Docker-镜像加速（可选，推荐）"><a href="#6-2-配置-Docker-镜像加速（可选，推荐）" class="headerlink" title="6.2 配置 Docker 镜像加速（可选，推荐）"></a>6.2 配置 Docker 镜像加速（可选，推荐）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/docker</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/docker/daemon.json &gt; /dev/null &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;registry-mirrors&quot;</span>: [</span><br><span class="line">    <span class="string">&quot;https://docker.m.daocloud.io&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.unsee.tech&quot;</span>,</span><br><span class="line">    <span class="string">&quot;https://docker.1ms.run&quot;</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-3-运行-Rancher-容器"><a href="#6-3-运行-Rancher-容器" class="headerlink" title="6.3 运行 Rancher 容器"></a>6.3 运行 Rancher 容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建持久化目录</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /opt/rancher</span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行 Rancher（单节点 Docker 模式）</span></span><br><span class="line"><span class="built_in">sudo</span> docker run -d \</span><br><span class="line">  --name rancher \</span><br><span class="line">  --restart=unless-stopped \</span><br><span class="line">  -p 80:80 \</span><br><span class="line">  -p 443:443 \</span><br><span class="line">  -v /opt/rancher:/var/lib/rancher \</span><br><span class="line">  --privileged \</span><br><span class="line">  rancher/rancher:latest</span><br></pre></td></tr></table></figure>
+
+<h3 id="6-4-获取初始密码并登录"><a href="#6-4-获取初始密码并登录" class="headerlink" title="6.4 获取初始密码并登录"></a>6.4 获取初始密码并登录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 等待约 1-2 分钟后查看日志获取 Bootstrap Password</span></span><br><span class="line"><span class="built_in">sudo</span> docker logs rancher 2&gt;&amp;1 | grep <span class="string">&quot;Bootstrap Password:&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>打开浏览器访问 <code>https://192.168.122.15</code>，输入上述密码，然后：</p>
+<ol>
+<li>设置新的 admin 密码</li>
+<li>配置 <strong>Server URL</strong> 为 <code>https://192.168.122.15</code>（或您规划的域名）</li>
+<li>同意条款进入 Dashboard</li>
+</ol>
+<hr>
+<h2 id="七、在-Rancher-UI-中手动添加-RKE2-集群"><a href="#七、在-Rancher-UI-中手动添加-RKE2-集群" class="headerlink" title="七、在 Rancher UI 中手动添加 RKE2 集群"></a>七、在 Rancher UI 中手动添加 RKE2 集群</h2><h3 id="7-1-导入已有集群"><a href="#7-1-导入已有集群" class="headerlink" title="7.1 导入已有集群"></a>7.1 导入已有集群</h3><ol>
+<li>登录 Rancher UI</li>
+<li>点击左上角 <strong>☰ → Cluster Management</strong></li>
+<li>点击 <strong>Import Existing</strong>（导入已有集群）</li>
+<li>选择 <strong>Generic</strong>（通用 Kubernetes 集群）</li>
+<li>输入集群名称，例如 <code>rke2-prod</code></li>
+<li>点击 <strong>Create</strong></li>
+</ol>
+<h3 id="7-2-在-Master-节点上执行-Rancher-生成的命令"><a href="#7-2-在-Master-节点上执行-Rancher-生成的命令" class="headerlink" title="7.2 在 Master 节点上执行 Rancher 生成的命令"></a>7.2 在 Master 节点上执行 Rancher 生成的命令</h3><p>Rancher 会生成一个 <code>kubectl apply</code> 命令，类似：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://192.168.122.15/v3/import/xxxxxxxx.yaml</span><br></pre></td></tr></table></figure>
+
+<p>在任意 RKE2 Master 节点上执行该命令（确保 <code>kubectl</code> 和 <code>KUBECONFIG</code> 已配置）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> KUBECONFIG=/etc/rancher/rke2/rke2.yaml</span><br><span class="line">kubectl apply -f https://192.168.122.15/v3/import/xxxxxxxx.yaml</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-3-验证导入"><a href="#7-3-验证导入" class="headerlink" title="7.3 验证导入"></a>7.3 验证导入</h3><p>等待几分钟后，在 Rancher UI 中查看集群状态，应显示为 <strong>Active</strong>。</p>
+<hr>
+<h2 id="八、关键配置文件汇总"><a href="#八、关键配置文件汇总" class="headerlink" title="八、关键配置文件汇总"></a>八、关键配置文件汇总</h2><h3 id="8-1-registries-yaml（所有-K8s-节点）"><a href="#8-1-registries-yaml（所有-K8s-节点）" class="headerlink" title="8.1 registries.yaml（所有 K8s 节点）"></a>8.1 registries.yaml（所有 K8s 节点）</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">mirrors:</span></span><br><span class="line">  <span class="attr">docker.io:</span></span><br><span class="line">    <span class="attr">endpoint:</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;https://docker.m.daocloud.io&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;https://docker.unsee.tech&quot;</span></span><br><span class="line">      <span class="bullet">-</span> <span class="string">&quot;https://docker.1ms.run&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="8-2-Master-01-config-yaml"><a href="#8-2-Master-01-config-yaml" class="headerlink" title="8.2 Master 01 config.yaml"></a>8.2 Master 01 config.yaml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">token:</span> <span class="string">my-rke2-cluster-token-2026</span></span><br><span class="line"><span class="attr">node-name:</span> <span class="string">rke2-master01</span></span><br><span class="line"><span class="attr">tls-san:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">192.168</span><span class="number">.122</span><span class="number">.10</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">192.168</span><span class="number">.122</span><span class="number">.11</span></span><br><span class="line">  <span class="bullet">-</span> <span class="number">192.168</span><span class="number">.122</span><span class="number">.12</span></span><br><span class="line"><span class="attr">cluster-cidr:</span> <span class="number">10.42</span><span class="number">.0</span><span class="number">.0</span><span class="string">/16</span></span><br><span class="line"><span class="attr">service-cidr:</span> <span class="number">10.43</span><span class="number">.0</span><span class="number">.0</span><span class="string">/16</span></span><br><span class="line"><span class="attr">cluster-dns:</span> <span class="number">10.43</span><span class="number">.0</span><span class="number">.10</span></span><br><span class="line"><span class="attr">write-kubeconfig-mode:</span> <span class="string">&quot;0644&quot;</span></span><br><span class="line"><span class="attr">kube-proxy-arg:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;--proxy-mode=ipvs&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;--ipvs-strict-arp=true&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="8-3-Worker-config-yaml"><a href="#8-3-Worker-config-yaml" class="headerlink" title="8.3 Worker config.yaml"></a>8.3 Worker config.yaml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server:</span> <span class="string">https://192.168.122.10:9345</span></span><br><span class="line"><span class="attr">token:</span> <span class="string">my-rke2-cluster-token-2026</span></span><br><span class="line"><span class="attr">node-name:</span> <span class="string">rke2-worker01</span></span><br><span class="line"><span class="attr">kube-proxy-arg:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;--proxy-mode=ipvs&quot;</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">&quot;--ipvs-strict-arp=true&quot;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="九、常见问题排查"><a href="#九、常见问题排查" class="headerlink" title="九、常见问题排查"></a>九、常见问题排查</h2><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>排查命令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RKE2 无法启动</td>
+<td><code>sudo journalctl -u rke2-server -f</code> 或 <code>sudo journalctl -u rke2-agent -f</code></td>
+</tr>
+<tr>
+<td>节点无法加入</td>
+<td>检查 9345 端口连通性、token 是否一致</td>
+</tr>
+<tr>
+<td>镜像拉取失败</td>
+<td>检查 <code>registries.yaml</code> 配置，重启服务</td>
+</tr>
+<tr>
+<td>kubectl 无法连接</td>
+<td>确认 <code>KUBECONFIG=/etc/rancher/rke2/rke2.yaml</code></td>
+</tr>
+<tr>
+<td>CNI 网络异常</td>
+<td>检查 <code>br_netfilter</code> 模块、防火墙 8472&#x2F;udp</td>
+</tr>
+<tr>
+<td>Rancher 无法访问</td>
+<td>检查 Docker 容器状态、<code>ufw</code> 是否放行 80&#x2F;443</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="十、参考文档"><a href="#十、参考文档" class="headerlink" title="十、参考文档"></a>十、参考文档</h2><ul>
+<li>RKE2 官方快速入门 </li>
+<li>RKE2 配置选项参考 </li>
+<li>RKE2 镜像仓库配置 </li>
+<li>Rancher Docker 单节点安装 </li>
+<li>RKE2 已知问题与限制</li>
+</ul>
+
+      </div>
+      
+        <div class="prev-or-next">
+          <div class="post-foot-next">
+            
+              <a href="/2026/06/24/%E5%87%8C%E7%82%B9%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%93%8D%E4%BD%9C%E6%96%87%E6%A1%A3/" target="_self">
+                <i class="iconfont icon-chevronleft"></i>
+                <span>上一页</span>
+              </a>
+            
+          </div>
+          <div class="post-attach">
+            <span class="post-pubtime">
+              <i class="iconfont icon-updatetime mr-10" title="更新时间"></i>
+              2026-06-26 15:11:51
+            </span>
+            
+                  <span class="post-tags">
+                    <i class="iconfont icon-tags mr-10" title="标签"></i>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Kubernetes/" title="Kubernetes">
+                        #Kubernetes
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/RKE2/" title="RKE2">
+                        #RKE2
+                      </a>
+                    </span>
+                    
+                    <span class="span--tag mr-8">
+                      <a href="/tags/Rancher/" title="Rancher">
+                        #Rancher
+                      </a>
+                    </span>
+                    
+                  </span>
+              
+          </div>
+          <div class="post-foot-prev">
+            
+          </div>
+        </div>
+      
+    </div>
+    
+  <div id="btn-catalog" class="btn-catalog">
+    <i class="iconfont icon-catalog"></i>
+  </div>
+  <div class="post-catalog hidden" id="catalog">
+    <div class="title">目录</div>
+    <div class="catalog-content">
+      
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E7%8E%AF%E5%A2%83%E8%A7%84%E5%88%92"><span class="toc-text">一、环境规划</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E6%89%80%E6%9C%89%E8%8A%82%E7%82%B9%EF%BC%881-5-%E5%8F%B7%EF%BC%89%E9%80%9A%E7%94%A8%E5%87%86%E5%A4%87"><span class="toc-text">二、所有节点（1-5 号）通用准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE"><span class="toc-text">2.1 系统基础配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E9%98%B2%E7%81%AB%E5%A2%99%E9%85%8D%E7%BD%AE%EF%BC%88UFW%EF%BC%89"><span class="toc-text">2.2 防火墙配置（UFW）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-NetworkManager-%E9%85%8D%E7%BD%AE%EF%BC%88%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-text">2.3 NetworkManager 配置（重要）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-%E9%85%8D%E7%BD%AE%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F%EF%BC%88registries-yaml%EF%BC%89"><span class="toc-text">2.4 配置镜像加速（registries.yaml）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E9%83%A8%E7%BD%B2-RKE2-Server-%E8%8A%82%E7%82%B9%EF%BC%88Master%EF%BC%89"><span class="toc-text">三、部署 RKE2 Server 节点（Master）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E7%AC%AC%E4%B8%80%E4%B8%AA-Master-%E8%8A%82%E7%82%B9%EF%BC%88192-168-122-10%EF%BC%89"><span class="toc-text">3.1 第一个 Master 节点（192.168.122.10）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%AC%AC%E4%BA%8C%E4%B8%AA-Master-%E8%8A%82%E7%82%B9%EF%BC%88192-168-122-11%EF%BC%89"><span class="toc-text">3.2 第二个 Master 节点（192.168.122.11）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E7%AC%AC%E4%B8%89%E4%B8%AA-Master-%E8%8A%82%E7%82%B9%EF%BC%88192-168-122-12%EF%BC%89"><span class="toc-text">3.3 第三个 Master 节点（192.168.122.12）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E9%83%A8%E7%BD%B2-RKE2-Agent-%E8%8A%82%E7%82%B9%EF%BC%88Worker%EF%BC%89"><span class="toc-text">四、部署 RKE2 Agent 节点（Worker）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-Worker-%E8%8A%82%E7%82%B9-1%EF%BC%88192-168-122-13%EF%BC%89"><span class="toc-text">4.1 Worker 节点 1（192.168.122.13）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-Worker-%E8%8A%82%E7%82%B9-2%EF%BC%88192-168-122-14%EF%BC%89"><span class="toc-text">4.2 Worker 节点 2（192.168.122.14）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E9%AA%8C%E8%AF%81-K8s-%E9%9B%86%E7%BE%A4%E7%8A%B6%E6%80%81"><span class="toc-text">五、验证 K8s 集群状态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E9%83%A8%E7%BD%B2-Rancher%EF%BC%88Docker-%E5%8D%95%E8%8A%82%E7%82%B9%EF%BC%89"><span class="toc-text">六、部署 Rancher（Docker 单节点）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-%E5%AE%89%E8%A3%85-Docker"><span class="toc-text">6.1 安装 Docker</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-%E9%85%8D%E7%BD%AE-Docker-%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%8C%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-text">6.2 配置 Docker 镜像加速（可选，推荐）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-%E8%BF%90%E8%A1%8C-Rancher-%E5%AE%B9%E5%99%A8"><span class="toc-text">6.3 运行 Rancher 容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-%E8%8E%B7%E5%8F%96%E5%88%9D%E5%A7%8B%E5%AF%86%E7%A0%81%E5%B9%B6%E7%99%BB%E5%BD%95"><span class="toc-text">6.4 获取初始密码并登录</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%9C%A8-Rancher-UI-%E4%B8%AD%E6%89%8B%E5%8A%A8%E6%B7%BB%E5%8A%A0-RKE2-%E9%9B%86%E7%BE%A4"><span class="toc-text">七、在 Rancher UI 中手动添加 RKE2 集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-%E5%AF%BC%E5%85%A5%E5%B7%B2%E6%9C%89%E9%9B%86%E7%BE%A4"><span class="toc-text">7.1 导入已有集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-%E5%9C%A8-Master-%E8%8A%82%E7%82%B9%E4%B8%8A%E6%89%A7%E8%A1%8C-Rancher-%E7%94%9F%E6%88%90%E7%9A%84%E5%91%BD%E4%BB%A4"><span class="toc-text">7.2 在 Master 节点上执行 Rancher 生成的命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-%E9%AA%8C%E8%AF%81%E5%AF%BC%E5%85%A5"><span class="toc-text">7.3 验证导入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E5%85%B3%E9%94%AE%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E6%B1%87%E6%80%BB"><span class="toc-text">八、关键配置文件汇总</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#8-1-registries-yaml%EF%BC%88%E6%89%80%E6%9C%89-K8s-%E8%8A%82%E7%82%B9%EF%BC%89"><span class="toc-text">8.1 registries.yaml（所有 K8s 节点）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-2-Master-01-config-yaml"><span class="toc-text">8.2 Master 01 config.yaml</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-3-Worker-config-yaml"><span class="toc-text">8.3 Worker config.yaml</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5"><span class="toc-text">九、常见问题排查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E5%8F%82%E8%80%83%E6%96%87%E6%A1%A3"><span class="toc-text">十、参考文档</span></a></li></ol>
+      
+    </div>
+  </div>
+
+  
+<script src="/js/catalog.js"></script>
+
+
+
+
+    
+      <div class="comments-container">
+        
+
+
+
+
+
+
+
+      </div>
+    
+  </div>
+
+
+        
+<div class="footer">
+  <div class="social">
+    <ul>
+      
+        <li>
+          
+              <a title="github" target="_blank" rel="noopener" href="https://github.com/Zcxx0322">
+                <i class="iconfont icon-github"></i>
+              </a>
+              
+        </li>
+        
+        <li>
+          
+            <a title="email" href="mailto:3611744356@qq.com">
+              <i class="iconfont icon-envelope"></i>
+            </a>
+            
+        </li>
+        
+    </ul>
+  </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Copyright © 2026 Oranges</a>
+        
+    </div>
+  
+    
+    <div class="footer-more">
+      
+        <a target="_blank" rel="noopener" href="https://github.com/zchengsite/hexo-theme-oranges">Theme by Oranges | Powered by Hexo</a>
+        
+    </div>
+  
+  
+    <div class="footer-views">
+      
+          本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+      
+          本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+        
+      
+          本站访客数<span id="busuanzi_value_site_uv"></span>人
+        
+      
+    </div>
+  
+</div>
+
+      </div>
+
+      <div class="tools-bar">
+        <div class="back-to-top tools-bar-item hidden">
+  <a href="javascript: void(0)">
+    <i class="iconfont icon-chevronup"></i>
+  </a>
+</div>
+
+
+<script src="/js/backtotop.js"></script>
+
+
+
+        
+  <div class="search-icon tools-bar-item" id="search-icon">
+    <a href="javascript: void(0)">
+      <i class="iconfont icon-search"></i>
+    </a>
+  </div>
+
+  <div class="search-overlay hidden">
+    <div class="search-content" tabindex="0">
+      <div class="search-title">
+        <span class="search-icon-input">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-search"></i>
+          </a>
+        </span>
+        
+          <input type="text" class="search-input" id="search-input" placeholder="搜索...">
+        
+        <span class="search-close-icon" id="search-close-icon">
+          <a href="javascript: void(0)">
+            <i class="iconfont icon-close"></i>
+          </a>
+        </span>
+      </div>
+      <div class="search-result" id="search-result"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var inputArea = document.querySelector("#search-input")
+    var searchOverlayArea = document.querySelector(".search-overlay")
+
+    inputArea.onclick = function() {
+      getSearchFile()
+      this.onclick = null
+    }
+
+    inputArea.onkeydown = function() {
+      if(event.keyCode == 13)
+        return false
+    }
+
+    function openOrHideSearchContent() {
+      let isHidden = searchOverlayArea.classList.contains('hidden')
+      if (isHidden) {
+        searchOverlayArea.classList.remove('hidden')
+        document.body.classList.add('hidden')
+        // inputArea.focus()
+      } else {
+        searchOverlayArea.classList.add('hidden')
+        document.body.classList.remove('hidden')
+      }
+    }
+
+    function blurSearchContent(e) {
+      if (e.target === searchOverlayArea) {
+        openOrHideSearchContent()
+      }
+    }
+
+    document.querySelector("#search-icon").addEventListener("click", openOrHideSearchContent, false)
+    document.querySelector("#search-close-icon").addEventListener("click", openOrHideSearchContent, false)
+    searchOverlayArea.addEventListener("click", blurSearchContent, false)
+
+    var searchFunc = function (path, search_id, content_id) {
+      'use strict';
+      var $input = document.getElementById(search_id);
+      var $resultContent = document.getElementById(content_id);
+      $resultContent.innerHTML = "<ul><span class='local-search-empty'>首次搜索，正在载入索引文件，请稍后……<span></ul>";
+      $.ajax({
+        // 0x01. load xml file
+        url: path,
+        dataType: "xml",
+        success: function (xmlResponse) {
+          // 0x02. parse xml file
+          var datas = $("entry", xmlResponse).map(function () {
+            return {
+              title: $("title", this).text(),
+              content: $("content", this).text(),
+              url: $("url", this).text()
+            };
+          }).get();
+          $resultContent.innerHTML = "";
+
+          $input.addEventListener('input', function () {
+            // 0x03. parse query to keywords list
+            var str = '<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length <= 0) {
+              return;
+            }
+            // 0x04. perform local searching
+            datas.forEach(function (data) {
+              var isMatch = true;
+              var content_index = [];
+              if (!data.title || data.title.trim() === '') {
+                data.title = "Untitled";
+              }
+              var orig_data_title = data.title.trim();
+              var data_title = orig_data_title.toLowerCase();
+              var orig_data_content = data.content.trim().replace(/<[^>]+>/g, "");
+              var data_content = orig_data_content.toLowerCase();
+              var data_url = data.url;
+              var index_title = -1;
+              var index_content = -1;
+              var first_occur = -1;
+              // only match artiles with not empty contents
+              if (data_content !== '') {
+                keywords.forEach(function (keyword, i) {
+                  index_title = data_title.indexOf(keyword);
+                  index_content = data_content.indexOf(keyword);
+
+                  if (index_title < 0 && index_content < 0) {
+                    isMatch = false;
+                  } else {
+                    if (index_content < 0) {
+                      index_content = 0;
+                    }
+                    if (i == 0) {
+                      first_occur = index_content;
+                    }
+                    // content_index.push({index_content:index_content, keyword_len:keyword_len});
+                  }
+                });
+              } else {
+                isMatch = false;
+              }
+              // 0x05. show search results
+              if (isMatch) {
+                str += "<li><a href='" + data_url + "' class='search-result-title'>" + orig_data_title + "</a>";
+                var content = orig_data_content;
+                if (first_occur >= 0) {
+                  // cut out 100 characters
+                  var start = first_occur - 20;
+                  var end = first_occur + 80;
+
+                  if (start < 0) {
+                    start = 0;
+                  }
+
+                  if (start == 0) {
+                    end = 100;
+                  }
+
+                  if (end > content.length) {
+                    end = content.length;
+                  }
+
+                  var match_content = content.substr(start, end);
+
+                  // highlight all keywords
+                  keywords.forEach(function (keyword) {
+                    var regS = new RegExp(keyword, "gi");
+                    match_content = match_content.replace(regS, "<span class=\"search-keyword\">" + keyword + "</span>");
+                  });
+
+                  str += "<p class=\"search-result-abstract\">" + match_content + "...</p>"
+                }
+                str += "</li>";
+              }
+            });
+            str += "</ul>";
+            if (str.indexOf('<li>') === -1) {
+              return $resultContent.innerHTML = "<ul><span class='local-search-empty'>没有找到内容，请尝试更换检索词。<span></ul>";
+            }
+            $resultContent.innerHTML = str;
+          });
+        },
+        error: function(xhr, status, error) {
+          $resultContent.innerHTML = ""
+          if (xhr.status === 404) {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>未找到search.xml文件，具体请参考：<a href='https://github.com/zchengsite/hexo-theme-oranges#configuration' target='_black'>configuration</a><span></ul>";
+          } else {
+            $resultContent.innerHTML = "<ul><span class='local-search-empty'>请求失败，尝试重新刷新页面或稍后重试。<span></ul>";
+          }
+        }
+      });
+      $(document).on('click', '#search-close-icon', function() {
+        $('#search-input').val('');
+        $('#search-result').html('');
+      });
+    }
+
+    var getSearchFile = function() {
+        var path = "/search.xml";
+        searchFunc(path, 'search-input', 'search-result');
+    }
+  </script>
+
+
+
+
+        
+  <div class="tools-bar-item theme-icon" id="switch-color-scheme">
+    <a href="javascript: void(0)">
+      <i id="theme-icon" class="iconfont icon-moon"></i>
+    </a>
+  </div>
+
+  
+<script src="/js/colorscheme.js"></script>
+
+
+
+
+
+        
+  
+    <div class="share-icon tools-bar-item">
+      <a href="javascript: void(0)" id="share-icon">
+        <i class="iconfont iconshare"></i>
+      </a>
+      <div class="share-content hidden">
+        
+          <a class="share-item" href="https://twitter.com/intent/tweet?text=' + RKE2%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4 + '&url=' + https%3A%2F%2Fzcxx0322.github.io%2F2026%2F06%2F26%2FRKE2%25E9%25AB%2598%25E5%258F%25AF%25E7%2594%25A8%25E9%259B%2586%25E7%25BE%25A4%2F + '" target="_blank" title="Twitter">
+            <i class="iconfont icon-twitter"></i>
+          </a>
+        
+        
+          <a class="share-item" href="https://www.facebook.com/sharer.php?u=https://zcxx0322.github.io/2026/06/26/RKE2%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4/" target="_blank" title="Facebook">
+            <i class="iconfont icon-facebooksquare"></i>
+          </a>
+        
+      </div>
+    </div>
+  
+  
+<script src="/js/shares.js"></script>
+
+
+
+      </div>
+    </div>
+  </body>
+</html>
